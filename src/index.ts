@@ -2,7 +2,7 @@ import type { ForgeClient } from "@tryforge/forgescript";
 import functions from "./functions/index.js";
 import "./types.js";                // patches ForgeClient typing (no runtime code)
 
-export default class ForgePages {
+class ForgePages {
   public name = "ForgePages";
   public description = "Light-weight paging helpers for ForgeScript";
   public version = "1.0.0";
@@ -14,4 +14,9 @@ export default class ForgePages {
       (client as any).nativeHandler?.add?.(fn) || (client as any).functions?.add?.(fn);
     }
   }
-} 
+}
+
+// Export both as default and as main export for maximum compatibility
+export default ForgePages;
+module.exports = ForgePages;
+module.exports.default = ForgePages; 

@@ -18,5 +18,8 @@ class ForgePages {
         }
     }
 }
+// Export both as default and as main export for maximum compatibility
 exports.default = ForgePages;
+module.exports = ForgePages;
+module.exports.default = ForgePages;
 //# sourceMappingURL=index.js.map
