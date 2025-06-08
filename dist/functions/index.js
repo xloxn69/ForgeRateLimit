@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// export an array ForgeScript's extension loader can consume
+// Export all functions for manual registration
 const pagesInit_js_1 = __importDefault(require("./core/pagesInit.js"));
 const addPageData_js_1 = __importDefault(require("./core/addPageData.js"));
 const removePageEntry_js_1 = __importDefault(require("./core/removePageEntry.js"));

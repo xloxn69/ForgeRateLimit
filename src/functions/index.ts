@@ -1,4 +1,4 @@
-// export an array ForgeScript's extension loader can consume
+// Export all functions for manual registration
 import pagesInit from "./core/pagesInit.js";
 import addPageData from "./core/addPageData.js";
 import removePageEntry from "./core/removePageEntry.js";

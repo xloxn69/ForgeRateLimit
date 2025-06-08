@@ -1,10 +1,10 @@
-import type { ForgeClient } from "@tryforge/forgescript";
+import { ForgeExtension, ForgeClient } from "@tryforge/forgescript";
 import "./types.js";
-declare class ForgePages {
+export declare class ForgePages extends ForgeExtension {
     name: string;
     description: string;
     version: string;
-    validateAndInit(client: ForgeClient): void;
+    init(client: ForgeClient): void;
 }
-export = ForgePages;
+export default ForgePages;
 //# sourceMappingURL=index.d.ts.map
