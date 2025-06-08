@@ -9,9 +9,10 @@ class ForgePages {
 
   public validateAndInit(client: ForgeClient) {
     if (!client.pageStores) client.pageStores = new Map();
-    // Register native functions directly on the client
+    // Register native functions using the correct API
     for (const fn of functions) {
-      (client as any).nativeHandler?.add?.(fn) || (client as any).functions?.add?.(fn);
+      // Use the internal native handler to register the functions
+      (client as any).nativeHandler.register(fn);
     }
   }
 }

@@ -11,9 +11,10 @@ class ForgePages {
     validateAndInit(client) {
         if (!client.pageStores)
             client.pageStores = new Map();
-        // Register native functions directly on the client
+        // Register native functions using the correct API
         for (const fn of index_js_1.default) {
-            client.nativeHandler?.add?.(fn) || client.functions?.add?.(fn);
+            // Use the internal native handler to register the functions
+            client.nativeHandler.register(fn);
         }
     }
 }
