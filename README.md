@@ -1,6 +1,6 @@
 # ForgePages
 
-A pagination extension for ForgeScript that provides powerful data pagination functions.
+ForgePages is a extension built for ForgeScript, enabling you to easily create, manage, and navigate through paginated data directly in your bot.
 
 ## Installation
 
@@ -175,15 +175,5 @@ $searchPages[items;laptop;2]
 $c[Returns: 1]
 ```
 
-## Error Handling
-
-Functions return appropriate error messages for:
-- Non-existent stores
-- Invalid indices
-- Out-of-bounds operations
-
-All functions validate their inputs and provide meaningful error messages when operations fail.
-
 ## Support
-
-For issues and support, visit the [GitHub repository](https://github.com/xloxn69/ForgePages). 
+If you need any assistance, don't hesitate to reach out by opening a support form in the official BotForge Discord server! :D
