@@ -1,12 +1,12 @@
 // Import functions directly
 import pagesInit from "./functions/pagesInit.js";
-import addPageData from "./functions/core/addPageData.js";
-import removePageEntry from "./functions/core/removePageEntry.js";
-import pagesList from "./functions/query/pagesList.js";
-import pagesSlice from "./functions/query/pagesSlice.js";
-import pageCount from "./functions/query/pageCount.js";
-import searchPages from "./functions/query/searchPages.js";
-import sortPages from "./functions/util/sortPages.js";
+import addPageData from "./functions/addPageData.js";
+import removePageEntry from "./functions/removePageEntry.js";
+import pagesList from "./functions/pagesList.js";
+import pagesSlice from "./functions/pagesSlice.js";
+import pageCount from "./functions/pageCount.js";
+import searchPages from "./functions/searchPages.js";
+import sortPages from "./functions/sortPages.js";
 import { writeFileSync } from "fs";
 import path from "path";
 
