@@ -2,7 +2,6 @@
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-Object.defineProperty(exports, "__esModule", { value: true });
 const index_js_1 = __importDefault(require("./functions/index.js"));
 require("./types.js"); // patches ForgeClient typing (no runtime code)
 class ForgePages {
@@ -18,8 +17,5 @@ class ForgePages {
         }
     }
 }
-// Export both as default and as main export for maximum compatibility
-exports.default = ForgePages;
 module.exports = ForgePages;
-module.exports.default = ForgePages;
 //# sourceMappingURL=index.js.map

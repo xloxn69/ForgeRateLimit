@@ -6,5 +6,5 @@ declare class ForgePages {
     version: string;
     validateAndInit(client: ForgeClient): void;
 }
-export default ForgePages;
+export = ForgePages;
 //# sourceMappingURL=index.d.ts.map

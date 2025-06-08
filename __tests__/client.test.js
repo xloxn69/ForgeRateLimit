@@ -1,6 +1,6 @@
 require("dotenv/config");
 const { ForgeClient } = require("@tryforge/forgescript");
-const ForgePages = require("../dist/index.js").default;
+const ForgePages = require("../dist/index.js");
 
 const client = new ForgeClient({
   intents: ["Guilds", "GuildMessages", "MessageContent"],

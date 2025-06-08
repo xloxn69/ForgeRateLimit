@@ -16,7 +16,5 @@ class ForgePages {
   }
 }
 
-// Export both as default and as main export for maximum compatibility
-export default ForgePages;
-module.exports = ForgePages;
-module.exports.default = ForgePages; 
+// Use only CommonJS export for better compatibility
+export = ForgePages; 
