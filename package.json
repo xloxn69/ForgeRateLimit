@@ -6,16 +6,23 @@
   "types": "dist/index.d.ts",
   "author": "xloxn69",
   "license": "MIT",
-  "keywords": ["forgescript", "tryforge", "botforge", "pagination", "paging"],
+  "keywords": [
+    "forgescript",
+    "tryforge",
+    "botforge",
+    "pagination",
+    "paging"
+  ],
   "scripts": {
     "build": "tsc",
     "docgen": "tsc && node dist/generateMdFunctions.js",
-    "test": "ts-node __tests__/client.test.ts"
+    "test": "npm run build && node __tests__/client.test.js"
   },
   "devDependencies": {
     "@tryforge/forgescript": "^2.3.0",
     "@types/node": "^20.10.6",
     "dotenv": "^16.3.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   }
-} 
+}

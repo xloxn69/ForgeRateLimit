@@ -7,7 +7,7 @@ export default class ForgePages {
   public description = "Light-weight paging helpers for ForgeScript";
   public version = "1.0.0";
 
-  public init(client: ForgeClient) {
+  public validateAndInit(client: ForgeClient) {
     if (!client.pageStores) client.pageStores = new Map();
     // Register native functions directly on the client
     for (const fn of functions) {

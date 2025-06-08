@@ -1,6 +1,6 @@
-import "dotenv/config";
-import { ForgeClient } from "@tryforge/forgescript";
-import ForgePages from "../dist/index.js";
+require("dotenv/config");
+const { ForgeClient } = require("@tryforge/forgescript");
+const ForgePages = require("../dist/index.js").default;
 
 const client = new ForgeClient({
   intents: ["Guilds", "GuildMessages", "MessageContent"],
@@ -10,4 +10,4 @@ const client = new ForgeClient({
 
 // load your command folder
 client.commands.load("__tests__/commands");
-client.login(process.env.BOT_TOKEN!); 
+client.login(process.env.BOT_TOKEN); 
