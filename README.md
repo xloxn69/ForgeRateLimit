@@ -5,7 +5,7 @@ A pagination extension for ForgeScript that provides powerful data pagination fu
 ## Installation
 
 ```bash
-npm install forgepages
+npm install github:xloxn69/ForgePages
 ```
 
 ## Usage
@@ -35,18 +35,6 @@ Creates or overwrites a pagination store with data split by separator.
 
 **Returns:** Boolean (true if successful)
 
-**Examples:**
-```javascript
-// Create a store with comma-separated names
-$pagesInit[users;,;Alice,Bob,Charlie,David,Eve,Frank,Grace,Henry]
-
-// Create a store with newline-separated items
-$pagesInit[items;\n;Item 1\nItem 2\nItem 3\nItem 4\nItem 5]
-
-// Create a store with custom separator
-$pagesInit[products;|;Phone|Laptop|Tablet|Watch|Headphones]
-```
-
 #### `$addPageData[id;values]`
 Appends new entries to an existing store.
 
@@ -56,18 +44,6 @@ Appends new entries to an existing store.
 
 **Returns:** Boolean (true if successful)
 
-**Examples:**
-```javascript
-// Add more users to the existing store
-$addPageData[users;Ivan,Jack,Kate]
-
-// Add single item
-$addPageData[items;Item 6]
-
-// Add multiple products
-$addPageData[products;Camera|Speaker|Monitor]
-```
-
 #### `$removePageEntry[id;index]`
 Removes one entry by 1-based index.
 
@@ -76,18 +52,6 @@ Removes one entry by 1-based index.
 - `index` (Number) - 1-based index to remove
 
 **Returns:** Boolean (true if item was removed, false if index out of bounds)
-
-**Examples:**
-```javascript
-// Remove the first user
-$removePageEntry[users;1]
-
-// Remove the 5th item
-$removePageEntry[items;5]
-
-// Remove the last product (if you know it's at index 8)
-$removePageEntry[products;8]
-```
 
 ### Query Functions
 
@@ -101,21 +65,6 @@ Returns a specific page of data.
 
 **Returns:** String (joined data using store's separator)
 
-**Examples:**
-```javascript
-// Get first page with 3 users per page
-$pagesList[users;1;3]
-// Returns: "Alice,Bob,Charlie"
-
-// Get second page with 2 items per page  
-$pagesList[items;2;2]
-// Returns: "Item 3\nItem 4"
-
-// Get third page with 2 products per page
-$pagesList[products;3;2]
-// Returns: "Tablet|Watch"
-```
-
 #### `$pagesSlice[id;startIndex;count]`
 Returns an arbitrary slice of data from start index.
 
@@ -126,21 +75,6 @@ Returns an arbitrary slice of data from start index.
 
 **Returns:** String (joined data using store's separator)
 
-**Examples:**
-```javascript
-// Get 3 users starting from index 2
-$pagesSlice[users;2;3]
-// Returns: "Bob,Charlie,David"
-
-// Get 2 items starting from index 4
-$pagesSlice[items;4;2]  
-// Returns: "Item 4\nItem 5"
-
-// Get 4 products starting from index 1
-$pagesSlice[products;1;4]
-// Returns: "Phone|Laptop|Tablet|Watch"
-```
-
 #### `$pageCount[id;itemsPerPage?]`
 Returns the total number of pages for given items per page.
 
@@ -149,21 +83,6 @@ Returns the total number of pages for given items per page.
 - `itemsPerPage` (Number, optional) - Items per page (default: 10)
 
 **Returns:** Number (total pages)
-
-**Examples:**
-```javascript
-// Count pages with 3 users per page
-$pageCount[users;3]
-// Returns: 3 (if 8 users total)
-
-// Count pages with default 10 items per page
-$pageCount[items]
-// Returns: 1 (if 6 items total)
-
-// Count pages with 2 products per page
-$pageCount[products;2]
-// Returns: 3 (if 5 products total)
-```
 
 #### `$searchPages[id;query;itemsPerPage?]`
 Finds the page number where a search query first appears.
@@ -174,21 +93,6 @@ Finds the page number where a search query first appears.
 - `itemsPerPage` (Number, optional) - Items per page (default: 10)
 
 **Returns:** Number (page number, or 0 if not found)
-
-**Examples:**
-```javascript
-// Find which page contains "Charlie" with 3 users per page
-$searchPages[users;Charlie;3]
-// Returns: 1 (Charlie is on page 1)
-
-// Find which page contains "Item 4" with 2 items per page
-$searchPages[items;Item 4;2]
-// Returns: 2 (Item 4 is on page 2)
-
-// Search for "laptop" (case-insensitive)
-$searchPages[products;laptop;10]
-// Returns: 1 (finds "Laptop" on page 1)
-```
 
 ### Utility Functions
 
@@ -201,50 +105,74 @@ Sorts the store data alphabetically.
 
 **Returns:** Boolean (true if successful)
 
-**Examples:**
-```javascript
-// Sort users alphabetically (ascending)
-$sortPages[users;asc]
-// Users are now: Alice,Bob,Charlie,David,Eve,Frank,Grace,Henry
-
-// Sort items in descending order
-$sortPages[items;desc]
-// Items are now: Item 6,Item 5,Item 4,Item 3,Item 2,Item 1
-
-// Sort products (default ascending)
-$sortPages[products]
-// Products are now: Camera,Headphones,Laptop,Monitor,Phone,Speaker,Tablet,Watch
-```
-
 ## Complete Example
 
-```javascript
-// Initialize a store with user data
+```
+$c[Initialize a store with user data]
 $pagesInit[users;,;Alice,Bob,Charlie,David,Eve,Frank,Grace,Henry,Ivan,Jack]
 
-// Add more users
-$addPageData[users;Kate,Liam,Maya]
+$c[Add more users to the store]
+$addPageData[users;Kate,Liam,Maya,Noah,Olivia]
 
-// Sort alphabetically
+$c[Sort users alphabetically in ascending order]
 $sortPages[users;asc]
 
-// Get total pages (4 users per page)
-$pageCount[users;4]  // Returns: 4
+$c[Get total number of pages with 4 users per page]
+$pageCount[users;4]
+$c[Returns: 4]
 
-// Get first page
-$pagesList[users;1;4]  // Returns: "Alice,Bob,Charlie,David"
+$c[Get the first page with 4 users per page]
+$pagesList[users;1;4]
+$c[Returns: "Alice,Bob,Charlie,David"]
 
-// Get second page  
-$pagesList[users;2;4]  // Returns: "Eve,Frank,Grace,Henry"
+$c[Get the second page with 4 users per page]
+$pagesList[users;2;4]
+$c[Returns: "Eve,Frank,Grace,Henry"]
 
-// Find page containing "Maya"
-$searchPages[users;Maya;4]  // Returns: 4
+$c[Get the third page with 4 users per page]
+$pagesList[users;3;4]
+$c[Returns: "Ivan,Jack,Kate,Liam"]
 
-// Remove a user
-$removePageEntry[users;5]  // Removes "Eve"
+$c[Get a custom slice: 3 users starting from index 6]
+$pagesSlice[users;6;3]
+$c[Returns: "Frank,Grace,Henry"]
 
-// Get slice of 3 users starting from index 6
-$pagesSlice[users;6;3]  // Returns: "Grace,Henry,Ivan"
+$c[Find which page contains "Maya" with 4 users per page]
+$searchPages[users;Maya;4]
+$c[Returns: 4]
+
+$c[Remove the 5th user (Eve)]
+$removePageEntry[users;5]
+
+$c[Check total pages again after removal]
+$pageCount[users;4]
+$c[Returns: 4 (now 14 users total)]
+
+$c[Get updated second page after removal]
+$pagesList[users;2;4]
+$c[Returns: "Frank,Grace,Henry,Ivan"]
+
+$c[Sort in descending order]
+$sortPages[users;desc]
+
+$c[Get first page after descending sort]
+$pagesList[users;1;4]
+$c[Returns: "Olivia,Noah,Maya,Liam"]
+
+$c[Create another store with different separator]
+$pagesInit[items;|;Phone|Laptop|Tablet|Watch|Camera|Speaker]
+
+$c[Get total pages for items with 2 per page]
+$pageCount[items;2]
+$c[Returns: 3]
+
+$c[Get second page of items]
+$pagesList[items;2;2]
+$c[Returns: "Tablet|Watch"]
+
+$c[Search for "laptop" (case-insensitive)]
+$searchPages[items;laptop;2]
+$c[Returns: 1]
 ```
 
 ## Error Handling
@@ -257,8 +185,5 @@ Functions return appropriate error messages for:
 All functions validate their inputs and provide meaningful error messages when operations fail.
 
 ## Support
-If you need any help, open a form in the offical BotForge discord support channel and ping me :D
 
-## License
-
-MIT 
+For issues and support, visit the [GitHub repository](https://github.com/xloxn69/ForgePages). 
