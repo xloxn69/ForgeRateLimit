@@ -1,0 +1,21 @@
+{
+  "name": "forgepages",
+  "version": "1.0.0",
+  "description": "Light-weight paging helpers for @tryforge/forgescript.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": "xloxn69",
+  "license": "MIT",
+  "keywords": ["forgescript", "tryforge", "botforge", "pagination", "paging"],
+  "scripts": {
+    "build": "tsc",
+    "docgen": "tsc && node dist/generateMdFunctions.js",
+    "test": "ts-node __tests__/client.test.ts"
+  },
+  "devDependencies": {
+    "@tryforge/forgescript": "^2.3.0",
+    "@types/node": "^20.10.6",
+    "dotenv": "^16.3.1",
+    "typescript": "^5.3.3"
+  }
+} 

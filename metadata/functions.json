@@ -1,0 +1,12 @@
+{
+  "functions": [
+    { "name": "$pagesInit", "version": "1.0.0", "description": "Create/overwrite a store" },
+    { "name": "$pagesList", "version": "1.0.0", "description": "Get a page" },
+    { "name": "$pagesSlice", "version": "1.0.0", "description": "Get any slice" },
+    { "name": "$pageCount", "version": "1.0.0", "description": "Total pages" },
+    { "name": "$addPageData", "version": "1.0.0", "description": "Append items" },
+    { "name": "$removePageEntry", "version": "1.0.0", "description": "Delete by index" },
+    { "name": "$sortPages", "version": "1.0.0", "description": "Sort asc/desc" },
+    { "name": "$searchPages", "version": "1.0.0", "description": "Locate query's page" }
+  ]
+} 
