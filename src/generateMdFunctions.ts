@@ -1,5 +1,5 @@
 // Import functions directly
-import pagesInit from "./functions/core/pagesInit.js";
+import pagesInit from "./functions/pagesInit.js";
 import addPageData from "./functions/core/addPageData.js";
 import removePageEntry from "./functions/core/removePageEntry.js";
 import pagesList from "./functions/query/pagesList.js";

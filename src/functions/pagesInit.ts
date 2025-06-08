@@ -1,5 +1,5 @@
 import { ArgType, NativeFunction } from "@tryforge/forgescript";
-import type { PageStore } from "../../types.js";
+import type { PageStore } from "../types.js";
 
 export default new NativeFunction({
   name: "$pagesInit",

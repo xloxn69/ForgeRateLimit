@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
-exports.default = {
+exports.default = new forgescript_1.NativeFunction({
     name: "$pagesInit",
     version: "1.0.0",
     description: "Creates / overwrites a paging store.",
@@ -21,7 +21,7 @@ exports.default = {
             data: raw.split(sep)
         };
         ctx.client.pageStores.set(id, store);
-        return { success: true, result: true };
+        return this.success(true);
     }
-};
+});
 //# sourceMappingURL=pagesInit.js.map

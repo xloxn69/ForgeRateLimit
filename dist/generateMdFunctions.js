@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 // Import functions directly
-const pagesInit_js_1 = __importDefault(require("./functions/core/pagesInit.js"));
+const pagesInit_js_1 = __importDefault(require("./functions/pagesInit.js"));
 const addPageData_js_1 = __importDefault(require("./functions/core/addPageData.js"));
 const removePageEntry_js_1 = __importDefault(require("./functions/core/removePageEntry.js"));
 const pagesList_js_1 = __importDefault(require("./functions/query/pagesList.js"));

@@ -2,7 +2,6 @@ import {
   ForgeExtension,
   ForgeClient
 } from "@tryforge/forgescript";
-import functions from "./functions/index.js";
 import "./types.js";                // patches ForgeClient typing (no runtime code)
 
 export class ForgePages extends ForgeExtension {
@@ -10,24 +9,15 @@ export class ForgePages extends ForgeExtension {
   description = "Light-weight paging helpers for ForgeScript";
   version = "1.0.0";
 
+  private instance!: ForgeClient;
+
   init(client: ForgeClient): void {
+    this.instance = client;
+    
     if (!client.pageStores) client.pageStores = new Map();
     
-    // Try the original working approach but with ForgeExtension
-    for (const fn of functions) {
-      try {
-        // Try multiple possible registration methods
-        if ((client as any).nativeHandler?.register) {
-          (client as any).nativeHandler.register(fn);
-        } else if ((client as any).functions?.add) {
-          (client as any).functions.add(fn);
-        } else {
-          console.warn('Could not find function registration method');
-        }
-      } catch (error) {
-        console.error('Error registering function:', fn.data?.name, error);
-      }
-    }
+    // Load functions using ForgeExtension's built-in loader like ForgeScheduler
+    this.load(__dirname + "/functions");
   }
 }
 
