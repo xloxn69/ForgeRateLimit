@@ -12,11 +12,17 @@ exports.default = new forgescript_1.NativeFunction({
         { name: "id", description: "Store identifier", type: forgescript_1.ArgType.String, required: true, rest: false },
         { name: "per", description: "Items per page", type: forgescript_1.ArgType.Number, required: false, rest: false }
     ],
-    execute(ctx, [id, perArg]) {
-        const per = perArg ?? 10;
-        const store = ctx.client.pageStores?.get(id);
+    async execute(ctx) {
+        const id = await this["resolveUnhandledArg"](ctx, 0);
+        if (!this["isValidReturnType"](id))
+            return id;
+        const perArg = await this["resolveUnhandledArg"](ctx, 1);
+        if (!this["isValidReturnType"](perArg))
+            return perArg;
+        const per = perArg.value ?? 10;
+        const store = ctx.client.pageStores?.get(id.value.trim());
         if (!store)
-            return this.customError(`Store "${id}" does not exist`);
+            return this.customError(`Store "${id.value}" does not exist`);
         const pages = Math.ceil(store.data.length / per);
         return this.success(pages);
     }

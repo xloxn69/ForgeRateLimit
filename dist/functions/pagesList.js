@@ -13,12 +13,21 @@ exports.default = new forgescript_1.NativeFunction({
         { name: "page", description: "Page number to get", type: forgescript_1.ArgType.Number, required: true, rest: false },
         { name: "per", description: "Items per page", type: forgescript_1.ArgType.Number, required: true, rest: false }
     ],
-    execute(ctx, [id, page, per]) {
-        const store = ctx.client.pageStores?.get(id);
+    async execute(ctx) {
+        const id = await this["resolveUnhandledArg"](ctx, 0);
+        if (!this["isValidReturnType"](id))
+            return id;
+        const page = await this["resolveUnhandledArg"](ctx, 1);
+        if (!this["isValidReturnType"](page))
+            return page;
+        const per = await this["resolveUnhandledArg"](ctx, 2);
+        if (!this["isValidReturnType"](per))
+            return per;
+        const store = ctx.client.pageStores?.get(id.value.trim());
         if (!store)
-            return this.customError(`Store "${id}" does not exist`);
-        const start = (page - 1) * per;
-        const slice = store.data.slice(start, start + per);
+            return this.customError(`Store "${id.value}" does not exist`);
+        const start = (page.value - 1) * per.value;
+        const slice = store.data.slice(start, start + per.value);
         return this.success(slice.join(store.sep));
     }
 });

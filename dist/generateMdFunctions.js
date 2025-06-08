@@ -5,13 +5,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 // Import functions directly
 const pagesInit_js_1 = __importDefault(require("./functions/pagesInit.js"));
-const addPageData_js_1 = __importDefault(require("./functions/addPageData.js"));
-const removePageEntry_js_1 = __importDefault(require("./functions/removePageEntry.js"));
-const pagesList_js_1 = __importDefault(require("./functions/pagesList.js"));
-const pagesSlice_js_1 = __importDefault(require("./functions/pagesSlice.js"));
-const pageCount_js_1 = __importDefault(require("./functions/pageCount.js"));
-const searchPages_js_1 = __importDefault(require("./functions/searchPages.js"));
-const sortPages_js_1 = __importDefault(require("./functions/sortPages.js"));
+const addPageData_js_1 = __importDefault(require("./functions/core/addPageData.js"));
+const removePageEntry_js_1 = __importDefault(require("./functions/core/removePageEntry.js"));
+const pagesList_js_1 = __importDefault(require("./functions/query/pagesList.js"));
+const pagesSlice_js_1 = __importDefault(require("./functions/query/pagesSlice.js"));
+const pageCount_js_1 = __importDefault(require("./functions/query/pageCount.js"));
+const searchPages_js_1 = __importDefault(require("./functions/query/searchPages.js"));
+const sortPages_js_1 = __importDefault(require("./functions/util/sortPages.js"));
 const fs_1 = require("fs");
 const path_1 = __importDefault(require("path"));
 const functions = [

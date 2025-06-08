@@ -1,1 +1,1 @@
-{"version":3,"file":"searchPages.d.ts","sourceRoot":"","sources":["../../../src/functions/query/searchPages.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,OAAO,EAAE,cAAc,EAAE,MAAM,uBAAuB,CAAC;;;;;;;;;;;;;;;;;;;;AAEhE,wBAsBG"}
+{"version":3,"file":"searchPages.d.ts","sourceRoot":"","sources":["../../../src/functions/query/searchPages.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,OAAO,EAAE,cAAc,EAAU,MAAM,uBAAuB,CAAC;;;;;;;;;;;;;;;;;;;;AAExE,wBA+BG"}

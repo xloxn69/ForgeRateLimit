@@ -12,11 +12,17 @@ exports.default = new forgescript_1.NativeFunction({
         { name: "id", description: "Store identifier", type: forgescript_1.ArgType.String, required: true, rest: false },
         { name: "index", description: "1-based index to remove", type: forgescript_1.ArgType.Number, required: true, rest: false }
     ],
-    execute(ctx, [id, num]) {
-        const store = ctx.client.pageStores?.get(id);
+    async execute(ctx) {
+        const id = await this["resolveUnhandledArg"](ctx, 0);
+        if (!this["isValidReturnType"](id))
+            return id;
+        const num = await this["resolveUnhandledArg"](ctx, 1);
+        if (!this["isValidReturnType"](num))
+            return num;
+        const store = ctx.client.pageStores?.get(id.value.trim());
         if (!store)
-            return this.customError(`Store "${id}" does not exist`);
-        const i = num - 1;
+            return this.customError(`Store "${id.value}" does not exist`);
+        const i = num.value - 1;
         if (i < 0 || i >= store.data.length)
             return this.success(false);
         store.data.splice(i, 1);

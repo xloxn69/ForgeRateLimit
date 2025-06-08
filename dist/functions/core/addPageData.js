@@ -12,11 +12,17 @@ exports.default = new forgescript_1.NativeFunction({
         { name: "id", description: "Store identifier", type: forgescript_1.ArgType.String, required: true, rest: false },
         { name: "values", description: "Values to append", type: forgescript_1.ArgType.String, required: true, rest: false }
     ],
-    execute(ctx, [id, values]) {
-        const store = ctx.client.pageStores?.get(id);
+    async execute(ctx) {
+        const id = await this["resolveUnhandledArg"](ctx, 0);
+        if (!this["isValidReturnType"](id))
+            return id;
+        const values = await this["resolveUnhandledArg"](ctx, 1);
+        if (!this["isValidReturnType"](values))
+            return values;
+        const store = ctx.client.pageStores?.get(id.value.trim());
         if (!store)
-            return this.customError(`Store "${id}" does not exist`);
-        store.data.push(...values.split(store.sep));
+            return this.customError(`Store "${id.value}" does not exist`);
+        store.data.push(...values.value.split(store.sep));
         return this.success(true);
     }
 });
