@@ -13,14 +13,23 @@ exports.default = new forgescript_1.NativeFunction({
         { name: "sep", description: "Separator to split data", type: forgescript_1.ArgType.String, required: true, rest: false },
         { name: "rawData", description: "Raw data string to split", type: forgescript_1.ArgType.String, required: true, rest: false }
     ],
-    async execute(ctx, [id, sep, raw]) {
+    async execute(ctx) {
         if (!ctx.client.pageStores)
             ctx.client.pageStores = new Map();
+        const id = await this["resolveUnhandledArg"](ctx, 0);
+        if (!this["isValidReturnType"](id))
+            return id;
+        const sep = await this["resolveUnhandledArg"](ctx, 1);
+        if (!this["isValidReturnType"](sep))
+            return sep;
+        const raw = await this["resolveUnhandledArg"](ctx, 2);
+        if (!this["isValidReturnType"](raw))
+            return raw;
         const store = {
-            sep,
-            data: raw.split(sep)
+            sep: sep.value,
+            data: raw.value.split(sep.value)
         };
-        ctx.client.pageStores.set(id, store);
+        ctx.client.pageStores.set(id.value.trim(), store);
         return this.success(true);
     }
 });
