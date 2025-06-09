@@ -201,10 +201,8 @@ $advancedSearchPages[items;item;$checkContains[$env[item];a]]
 $c[Returns: "Camera"]
 
 $c[Advanced sort by string length (shortest first)]
-$advancedSortPages[items;x;y;$sub[$stringLength[$env[x]];$stringLength[$env[y]]]]
+$advancedSortPages[items;x;y;$sub[$charCount[$env[x]];$charCount[$env[y]]]]
 
-$c[Advanced sort by reverse alphabetical in a custom way]  
-$advancedSortPages[users;first;second;$if[$less[$env[first];$env[second]];1;-1]]
 
 ```
 
