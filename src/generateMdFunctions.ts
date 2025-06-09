@@ -5,7 +5,8 @@ import removePageEntry from "./functions/core/removePageEntry.js";
 import pagesList from "./functions/query/pagesList.js";
 import pagesSlice from "./functions/query/pagesSlice.js";
 import pageCount from "./functions/query/pageCount.js";
-import searchPages from "./functions/query/searchPages.js";
+import searchPages from "./functions/query/basicSearchPages.js";
+import advancedSearchPages from "./functions/query/searchPages.js";
 import sortPages from "./functions/util/sortPages.js";
 import { writeFileSync } from "fs";
 import path from "path";
@@ -18,6 +19,7 @@ const functions = [
   pagesSlice,
   pageCount,
   searchPages,
+  advancedSearchPages,
   sortPages
 ];
 

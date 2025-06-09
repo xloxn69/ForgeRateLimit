@@ -177,3 +177,85 @@ $c[Returns: 1]
 
 ## Support
 If you need any assistance, don't hesitate to reach out by opening a support form in the official BotForge Discord server! :D
+
+## Advanced Search Examples
+
+The `$advancedSearchPages` function allows you to execute ForgeScript code against each entry in your store. Inside your code snippet, the current entry is available as `$env[d]`.
+
+### Basic Usage
+
+```forgescript
+$c[Initialize a store with some data]
+$pagesInit[users;,;Phone,Laptop,Tablet,Watch,Camera]
+
+$c[Find all entries that contain "lap" (case insensitive)]
+$advancedSearchPages[
+  users;
+  $return[
+    $checkContains[$lowercase[$env[d]];lap]
+  ]
+]
+$c[Returns: "Laptop"]
+```
+
+### Complex Filtering
+
+```forgescript
+$c[Find entries that start with specific letters]
+$advancedSearchPages[
+  users;
+  $return[
+    $or[
+      $startsWith[$env[d];P];
+      $startsWith[$env[d];C]
+    ]
+  ]
+]
+$c[Returns: "Phone,Camera"]
+```
+
+### Conditional Logic
+
+```forgescript
+$c[Find entries based on length]
+$advancedSearchPages[
+  users;
+  $return[
+    $if[$greater[$stringLength[$env[d]];5];true;false]
+  ]
+]
+$c[Returns entries longer than 5 characters: "Laptop,Tablet,Camera"]
+```
+
+### Using with Store Data
+
+```forgescript
+$c[Initialize a store with user data]
+$pagesInit[players;|;Alice:25:Warrior|Bob:30:Mage|Charlie:22:Rogue|Diana:28:Paladin]
+
+$c[Find all warriors or paladins]
+$advancedSearchPages[
+  players;
+  $return[
+    $or[
+      $checkContains[$env[d];Warrior];
+      $checkContains[$env[d];Paladin]
+    ]
+  ]
+]
+$c[Returns: "Alice:25:Warrior|Diana:28:Paladin"]
+```
+
+## Basic Search (Backwards Compatible)
+
+The original `$searchPages` function is still available for simple string matching:
+
+```forgescript
+$pagesInit[items;,;Apple,Banana,Cherry,Date]
+$searchPages[items;an;2]
+$c[Returns: 1 (page number where "an" first appears)]
+```
+
+## License
+
+MIT

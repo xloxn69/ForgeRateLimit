@@ -7,4 +7,5 @@
 | `$pagesSlice` | Returns an arbitrary slice from start, count. |
 | `$pageCount` | How many pages the store has at N per-page. |
 | `$searchPages` | Finds the page on which a query first appears. |
+| `$advancedSearchPages` | Filters entries via a snippet that must return true. |
 | `$sortPages` | Alphabetically sorts a store asc/desc. |

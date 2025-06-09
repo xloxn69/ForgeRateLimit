@@ -10,6 +10,7 @@ const removePageEntry_js_1 = __importDefault(require("./functions/core/removePag
 const pagesList_js_1 = __importDefault(require("./functions/query/pagesList.js"));
 const pagesSlice_js_1 = __importDefault(require("./functions/query/pagesSlice.js"));
 const pageCount_js_1 = __importDefault(require("./functions/query/pageCount.js"));
+const basicSearchPages_js_1 = __importDefault(require("./functions/query/basicSearchPages.js"));
 const searchPages_js_1 = __importDefault(require("./functions/query/searchPages.js"));
 const sortPages_js_1 = __importDefault(require("./functions/util/sortPages.js"));
 const fs_1 = require("fs");
@@ -21,6 +22,7 @@ const functions = [
     pagesList_js_1.default,
     pagesSlice_js_1.default,
     pageCount_js_1.default,
+    basicSearchPages_js_1.default,
     searchPages_js_1.default,
     sortPages_js_1.default
 ];
