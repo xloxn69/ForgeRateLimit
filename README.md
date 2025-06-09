@@ -94,12 +94,13 @@ Finds the page number where a search query first appears.
 
 **Returns:** Number (page number, or 0 if not found)
 
-#### `$advancedSearchPages[id;code;per?]`
-Filters entries via a ForgeScript code snippet that must return true. The current entry is available as `$env[d]`.
+#### `$advancedSearchPages[id;variable;code;per?]`
+Runs your snippet against each page-store entry (bound to your variable) and returns those entries where it returns true.
 
 **Parameters:**
 - `id` (String) - Store identifier
-- `code` (String) - ForgeScript code to execute against each entry
+- `variable` (String) - The variable to load the entry value to
+- `code` (String) - The code to execute for every entry
 - `per` (Number, optional) - Items per page (unused, for compatibility)
 
 **Returns:** String (filtered entries joined by store's separator)
@@ -184,9 +185,13 @@ $c[Search for "laptop" (case-insensitive)]
 $searchPages[items;laptop;2]
 $c[Returns: 1]
 
-$c[Find users named Laptop]
-$advancedSearchPages[users;$return[$checkCondition[$checkContains[$env[d];Lap]==true]]]
-$c[Returns: "Laptop"]
+$c[Find devices containing "a"]
+$advancedSearchPages[items;device;$return[$checkContains[$lowercase[$env[device]];a]]]
+$c[Returns: "Camera"]
+
+$c[Find devices with exactly 5 characters]
+$advancedSearchPages[items;item;$return[$equals[$stringLength[$env[item]];5]]]
+$c[Returns: "Phone|Watch"]
 
 ```
 
