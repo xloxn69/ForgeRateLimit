@@ -8,6 +8,7 @@ import pageCount from "./functions/query/pageCount.js";
 import searchPages from "./functions/query/basicSearchPages.js";
 import advancedSearchPages from "./functions/query/searchPages.js";
 import sortPages from "./functions/util/sortPages.js";
+import advancedSortPages from "./functions/util/advancedSortPages.js";
 import { writeFileSync } from "fs";
 import path from "path";
 
@@ -20,7 +21,8 @@ const functions = [
   pageCount,
   searchPages,
   advancedSearchPages,
-  sortPages
+  sortPages,
+  advancedSortPages
 ];
 
 const lines: string[] = [

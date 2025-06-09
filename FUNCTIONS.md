@@ -9,3 +9,4 @@
 | `$searchPages` | Finds the page on which a query first appears. |
 | `$advancedSearchPages` | Loops through each entry in a paging store (bound to your variable), runs your code snippet, and returns all entries where it returned true. |
 | `$sortPages` | Alphabetically sorts a store asc/desc. |
+| `$advancedSortPages` | Advanced sort for page store entries using custom comparison logic |

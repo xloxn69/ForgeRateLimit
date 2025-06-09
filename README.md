@@ -116,6 +116,17 @@ Sorts the store data alphabetically.
 
 **Returns:** Boolean (true if successful)
 
+#### `$advancedSortPages[id;var1;var2;code]`
+Advanced sort for page store entries using custom comparison logic.
+
+**Parameters:**
+- `id` (String) - The store identifier
+- `var1` (String) - The $env variable 1 to hold first comparison value
+- `var2` (String) - The $env variable 2 to hold second comparison value  
+- `code` (String) - Code to execute for comparison (should return number: negative if first < second, 0 if equal, positive if first > second)
+
+**Returns:** Boolean (true if successful)
+
 ## Complete Example
 
 ```
@@ -189,9 +200,11 @@ $c[Find devices containing "a"]
 $advancedSearchPages[items;item;$checkContains[$env[item];a]]
 $c[Returns: "Camera"]
 
-$c[Find devices with exactly 5 characters]
-$advancedSearchPages[items;device;$equals[$stringLength[$env[device]];5]]
-$c[Returns: "Phone|Watch"]
+$c[Advanced sort by string length (shortest first)]
+$advancedSortPages[items;x;y;$sub[$stringLength[$env[x]];$stringLength[$env[y]]]]
+
+$c[Advanced sort by reverse alphabetical in a custom way]  
+$advancedSortPages[users;first;second;$if[$less[$env[first];$env[second]];1;-1]]
 
 ```
 

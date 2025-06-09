@@ -13,6 +13,7 @@ const pageCount_js_1 = __importDefault(require("./functions/query/pageCount.js")
 const basicSearchPages_js_1 = __importDefault(require("./functions/query/basicSearchPages.js"));
 const searchPages_js_1 = __importDefault(require("./functions/query/searchPages.js"));
 const sortPages_js_1 = __importDefault(require("./functions/util/sortPages.js"));
+const advancedSortPages_js_1 = __importDefault(require("./functions/util/advancedSortPages.js"));
 const fs_1 = require("fs");
 const path_1 = __importDefault(require("path"));
 const functions = [
@@ -24,7 +25,8 @@ const functions = [
     pageCount_js_1.default,
     basicSearchPages_js_1.default,
     searchPages_js_1.default,
-    sortPages_js_1.default
+    sortPages_js_1.default,
+    advancedSortPages_js_1.default
 ];
 const lines = [
     "| Function | Description |",
