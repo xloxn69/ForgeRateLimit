@@ -53,7 +53,7 @@ Appends new entries to an existing store.
 **Example:**
 ```
 $!pagesInit[fruits;,;Apple,Banana]
-$addPageData[fruits;Cherry,Date]
+$!addPageData[fruits;Cherry,Date]
 $pagesList[fruits;1;10]
 $c[Returns: "Apple,Banana,Cherry,Date" - Added 2 new entries to store]
 ```
@@ -70,7 +70,7 @@ Removes one entry by 1-based index.
 **Example:**
 ```
 $!pagesInit[colors;,;Red,Green,Blue,Yellow]
-$removePageEntry[colors;2]
+$!removePageEntry[colors;2]
 $pagesList[colors;1;10]
 $c[Returns: "Red,Blue,Yellow" - Removed "Green" (index 2)]
 ```
@@ -175,7 +175,7 @@ Sorts the store data alphabetically.
 **Example:**
 ```
 $!pagesInit[names;,;Zoe,Alice,Bob,Charlie]
-$sortPages[names;asc]
+$!sortPages[names;asc]
 $pagesList[names;1;10]
 $c[Returns: "Alice,Bob,Charlie,Zoe" - Sorted alphabetically ascending]
 ```
@@ -193,10 +193,10 @@ Advanced sort for page store entries using custom comparison logic.
 
 **Example:**
 ```
-$!pagesInit[words;,;Cat,Elephant,Dog,Fish]
-$advancedSortPages[words;w1;w2;$sub[$len[$env[w1]];$len[$env[w2]]]]
+$!pagesInit[words;,;Cat,Elephant,Dog,Fish,Snake]
+$!advancedSortPages[words;w1;w2;$sub[$charCount[$env[w1]];$charCount[$env[w2]]]]
 $pagesList[words;1;10]
-$c[Returns: "Cat,Dog,Fish,Elephant" - Sorted by string length (shortest first)]
+$c[Returns: "Cat,Dog,Fish,Snake,Elephant" - Sorted by string length (shortest first)]
 ```
 
 ## Support
