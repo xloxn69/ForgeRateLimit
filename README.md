@@ -35,6 +35,12 @@ Creates or overwrites a pagination store with data split by separator.
 
 **Returns:** Boolean (true if successful)
 
+**Example:**
+```
+$pagesInit[users;,;Alice,Bob,Charlie,David,Eve]
+$c[Returns: true - Creates store "users" with 5 entries]
+```
+
 #### `$addPageData[id;values]`
 Appends new entries to an existing store.
 
@@ -44,6 +50,14 @@ Appends new entries to an existing store.
 
 **Returns:** Boolean (true if successful)
 
+**Example:**
+```
+$pagesInit[fruits;,;Apple,Banana]
+$addPageData[fruits;Cherry,Date]
+$pagesList[fruits;1;10]
+$c[Returns: "Apple,Banana,Cherry,Date" - Added 2 new entries to store]
+```
+
 #### `$removePageEntry[id;index]`
 Removes one entry by 1-based index.
 
@@ -52,6 +66,14 @@ Removes one entry by 1-based index.
 - `index` (Number) - 1-based index to remove
 
 **Returns:** Boolean (true if item was removed, false if index out of bounds)
+
+**Example:**
+```
+$pagesInit[colors;,;Red,Green,Blue,Yellow]
+$removePageEntry[colors;2]
+$pagesList[colors;1;10]
+$c[Returns: "Red,Blue,Yellow" - Removed "Green" (index 2)]
+```
 
 ### Query Functions
 
@@ -65,6 +87,13 @@ Returns a specific page of data.
 
 **Returns:** String (joined data using store's separator)
 
+**Example:**
+```
+$pagesInit[items;,;Item1,Item2,Item3,Item4,Item5,Item6]
+$pagesList[items;2;3]
+$c[Returns: "Item4,Item5,Item6" - Page 2 with 3 items per page]
+```
+
 #### `$pagesSlice[id;startIndex;count]`
 Returns an arbitrary slice of data from start index.
 
@@ -75,6 +104,13 @@ Returns an arbitrary slice of data from start index.
 
 **Returns:** String (joined data using store's separator)
 
+**Example:**
+```
+$pagesInit[letters;,;A,B,C,D,E,F,G,H]
+$pagesSlice[letters;3;4]
+$c[Returns: "C,D,E,F" - 4 items starting from position 3]
+```
+
 #### `$pageCount[id;itemsPerPage?]`
 Returns the total number of pages for given items per page.
 
@@ -83,6 +119,13 @@ Returns the total number of pages for given items per page.
 - `itemsPerPage` (Number, optional) - Items per page (default: 10)
 
 **Returns:** Number (total pages)
+
+**Example:**
+```
+$pagesInit[data;,;1,2,3,4,5,6,7,8,9,10,11,12,13]
+$pageCount[data;5]
+$c[Returns: 3 - 13 items divided by 5 per page = 3 pages]
+```
 
 #### `$searchPages[id;query;itemsPerPage?]`
 Finds the page number where a search query first appears.
@@ -94,16 +137,29 @@ Finds the page number where a search query first appears.
 
 **Returns:** Number (page number, or 0 if not found)
 
-#### `$advancedSearchPages[id;variable;code;per?]`
-Loops through each entry in a paging store (bound to your variable), runs your code snippet, and returns all entries where it returned true.
+**Example:**
+```
+$pagesInit[animals;,;Cat,Dog,Elephant,Fish,Giraffe,Horse]
+$searchPages[animals;Elephant;3]
+$c[Returns: 1 - "Elephant" found on page 1 with 3 items per page]
+```
+
+#### `$advancedSearchPages[id;variable;code]`
+Maps through each entry in a paging store, runs code for each entry, and returns all results joined by separator.
 
 **Parameters:**
 - `id` (String) - The store identifier
 - `variable` (String) - The name of the variable to assign each entry to (accessible as `$env[variable]`)
-- `code` (String) - ForgeScript code to execute for each entry (must return true/false)
-- `per` (Number, optional) - Optional items‐per‐page (currently unused—just for API consistency)
+- `code` (String) - ForgeScript code to execute for each entry (use $return to output values)
 
-**Returns:** String (filtered entries joined by store's separator)
+**Returns:** String (all returned values joined by store's separator)
+
+**Example:**
+```
+$pagesInit[numbers;,;1,2,3,4,5]
+$advancedSearchPages[numbers;num;$return[$math[$env[num] * 2]]]
+$c[Returns: "2,4,6,8,10" - Each number doubled using $return]
+```
 
 ### Utility Functions
 
@@ -116,6 +172,14 @@ Sorts the store data alphabetically.
 
 **Returns:** Boolean (true if successful)
 
+**Example:**
+```
+$pagesInit[names;,;Zoe,Alice,Bob,Charlie]
+$sortPages[names;asc]
+$pagesList[names;1;10]
+$c[Returns: "Alice,Bob,Charlie,Zoe" - Sorted alphabetically ascending]
+```
+
 #### `$advancedSortPages[id;var1;var2;code]`
 Advanced sort for page store entries using custom comparison logic.
 
@@ -127,80 +191,35 @@ Advanced sort for page store entries using custom comparison logic.
 
 **Returns:** Boolean (true if successful)
 
-## Complete Example
+**Example:**
+```
+$pagesInit[words;,;Cat,Elephant,Dog,Fish]
+$advancedSortPages[words;w1;w2;$sub[$len[$env[w1]];$len[$env[w2]]]]
+$pagesList[words;1;10]
+$c[Returns: "Cat,Dog,Fish,Elephant" - Sorted by string length (shortest first)]
+```
+
+
+
+## Complete Usage Example
 
 ```
-$c[Initialize a store with user data]
+$c[Complete workflow example]
 $pagesInit[users;,;Alice,Bob,Charlie,David,Eve,Frank,Grace,Henry,Ivan,Jack]
-
-$c[Add more users to the store]
 $addPageData[users;Kate,Liam,Maya,Noah,Olivia]
-
-$c[Sort users alphabetically in ascending order]
 $sortPages[users;asc]
 
-$c[Get total number of pages with 4 users per page]
-$pageCount[users;4]
-$c[Returns: 4]
+$c[Display pagination info]
+Total users: $len[$split[$pagesList[users;1;100];,]]
+Total pages (4 per page): $pageCount[users;4]
+Page 1: $pagesList[users;1;4]
+Page 2: $pagesList[users;2;4]
 
-$c[Get the first page with 4 users per page]
-$pagesList[users;1;4]
-$c[Returns: "Alice,Bob,Charlie,David"]
-
-$c[Get the second page with 4 users per page]
-$pagesList[users;2;4]
-$c[Returns: "Eve,Frank,Grace,Henry"]
-
-$c[Get the third page with 4 users per page]
-$pagesList[users;3;4]
-$c[Returns: "Ivan,Jack,Kate,Liam"]
-
-$c[Get a custom slice: 3 users starting from index 6]
-$pagesSlice[users;6;3]
-$c[Returns: "Frank,Grace,Henry"]
-
-$c[Find which page contains "Maya" with 4 users per page]
-$searchPages[users;Maya;4]
-$c[Returns: 4]
-
-$c[Remove the 5th user (Eve)]
+$c[Search and modify]
+Maya is on page: $searchPages[users;Maya;4]
 $removePageEntry[users;5]
-
-$c[Check total pages again after removal]
-$pageCount[users;4]
-$c[Returns: 4 (now 14 users total)]
-
-$c[Get updated second page after removal]
-$pagesList[users;2;4]
-$c[Returns: "Frank,Grace,Henry,Ivan"]
-
-$c[Sort in descending order]
-$sortPages[users;desc]
-
-$c[Get first page after descending sort]
-$pagesList[users;1;4]
-$c[Returns: "Olivia,Noah,Maya,Liam"]
-
-$c[Create another store with different separator]
-$pagesInit[items;|;Phone|Laptop|Tablet|Watch|Camera|Speaker]
-
-$c[Get total pages for items with 2 per page]
-$pageCount[items;2]
-$c[Returns: 3]
-
-$c[Get second page of items]
-$pagesList[items;2;2]
-$c[Returns: "Tablet|Watch"]
-
-$c[Search for "laptop" (case-insensitive)]
-$searchPages[items;laptop;2]
-$c[Returns: 1]
-
-$c[Find devices containing "a"]
-$advancedSearchPages[items;item;$checkContains[$env[item];a]]
-$c[Returns: "Camera"]
-
-$c[Advanced sort by string length (shortest first)]
+$c[After removing 5th user, page 2 is now: $pagesList[users;2;4]]
+```
 $advancedSortPages[items;x;y;$sub[$charCount[$env[x]];$charCount[$env[y]]]]
 
 

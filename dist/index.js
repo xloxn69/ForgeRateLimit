@@ -12,13 +12,10 @@ class ForgePages extends forgescript_1.ForgeExtension {
         this.instance = client;
         if (!client.pageStores)
             client.pageStores = new Map();
-        // Load functions using ForgeExtension's built-in loader like ForgeScheduler
         this.load(__dirname + "/functions");
     }
 }
 exports.ForgePages = ForgePages;
-// Also export as default and module.exports for compatibility
 exports.default = ForgePages;
 module.exports = ForgePages;
 module.exports.default = ForgePages;
-//# sourceMappingURL=index.js.map

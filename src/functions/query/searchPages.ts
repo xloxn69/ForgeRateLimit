@@ -10,7 +10,7 @@ export default new NativeFunction({
   name: "$advancedSearchPages",
   version: "1.0.0",
   description:
-    "Loops through each entry in a paging store (bound to your variable), runs your code snippet, and returns all entries where it returned true.",
+    "Maps through each entry in a paging store, runs code for each entry, and returns all results joined by separator.",
   brackets: true,
   unwrap: false,
   output: ArgType.String,
@@ -31,16 +31,9 @@ export default new NativeFunction({
     },
     {
       name: "code",
-      description: "ForgeScript code to execute for each entry (must return true/false)",
+      description: "ForgeScript code to execute for each entry (use $return to output values)",
       type: ArgType.String,
       required: true,
-      rest: false
-    },
-    {
-      name: "per",
-      description: "Optional items‐per‐page (currently unused—just for API consistency)",
-      type: ArgType.Number,
-      required: false,
       rest: false
     }
   ],
@@ -64,7 +57,7 @@ export default new NativeFunction({
     const store = ctx.client.pageStores?.get(storeId);
     if (!store) return this.customError(`Store "${storeId}" not found`);
 
-    const hits: string[] = [];
+    const results: string[] = [];
 
     // iterate every entry
     for (const entry of store.data) {
@@ -73,13 +66,16 @@ export default new NativeFunction({
 
       // run the user's snippet
       const rt: Return = (await this["resolveCode"](ctx, codeField)) as Return;
-      if (!this["isValidReturnType"](rt)) return rt;
-
-      // collect only those where snippet returned true
-      if (rt.value === true) hits.push(entry);
+      
+      // if code used $return, collect the returned value
+      if (rt.return) {
+        results.push(String(rt.value));
+      } else if (!this["isValidReturnType"](rt)) {
+        return rt;
+      }
     }
 
-    // return the filtered entries joined by the store's separator
-    return this.success(hits.join(store.sep));
+    // return the results joined by the store's separator
+    return this.success(results.join(store.sep));
   }
 }); 
