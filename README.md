@@ -52,7 +52,7 @@ Appends new entries to an existing store.
 
 **Example:**
 ```
-$pagesInit[fruits;,;Apple,Banana]
+$!pagesInit[fruits;,;Apple,Banana]
 $addPageData[fruits;Cherry,Date]
 $pagesList[fruits;1;10]
 $c[Returns: "Apple,Banana,Cherry,Date" - Added 2 new entries to store]
@@ -69,7 +69,7 @@ Removes one entry by 1-based index.
 
 **Example:**
 ```
-$pagesInit[colors;,;Red,Green,Blue,Yellow]
+$!pagesInit[colors;,;Red,Green,Blue,Yellow]
 $removePageEntry[colors;2]
 $pagesList[colors;1;10]
 $c[Returns: "Red,Blue,Yellow" - Removed "Green" (index 2)]
@@ -89,7 +89,7 @@ Returns a specific page of data.
 
 **Example:**
 ```
-$pagesInit[items;,;Item1,Item2,Item3,Item4,Item5,Item6]
+$!pagesInit[items;,;Item1,Item2,Item3,Item4,Item5,Item6]
 $pagesList[items;2;3]
 $c[Returns: "Item4,Item5,Item6" - Page 2 with 3 items per page]
 ```
@@ -106,7 +106,7 @@ Returns an arbitrary slice of data from start index.
 
 **Example:**
 ```
-$pagesInit[letters;,;A,B,C,D,E,F,G,H]
+$!pagesInit[letters;,;A,B,C,D,E,F,G,H]
 $pagesSlice[letters;3;4]
 $c[Returns: "C,D,E,F" - 4 items starting from position 3]
 ```
@@ -122,7 +122,7 @@ Returns the total number of pages for given items per page.
 
 **Example:**
 ```
-$pagesInit[data;,;1,2,3,4,5,6,7,8,9,10,11,12,13]
+$!pagesInit[data;,;1,2,3,4,5,6,7,8,9,10,11,12,13]
 $pageCount[data;5]
 $c[Returns: 3 - 13 items divided by 5 per page = 3 pages]
 ```
@@ -139,7 +139,7 @@ Finds the page number where a search query first appears.
 
 **Example:**
 ```
-$pagesInit[animals;,;Cat,Dog,Elephant,Fish,Giraffe,Horse]
+$!pagesInit[animals;,;Cat,Dog,Elephant,Fish,Giraffe,Horse]
 $searchPages[animals;Elephant;3]
 $c[Returns: 1 - "Elephant" found on page 1 with 3 items per page]
 ```
@@ -156,7 +156,7 @@ Maps through each entry in a paging store, runs code for each entry, and returns
 
 **Example:**
 ```
-$pagesInit[numbers;,;1,2,3,4,5]
+$!pagesInit[numbers;,;1,2,3,4,5]
 $advancedSearchPages[numbers;num;$return[$math[$env[num] * 2]]]
 $c[Returns: "2,4,6,8,10" - Each number doubled using $return]
 ```
@@ -174,7 +174,7 @@ Sorts the store data alphabetically.
 
 **Example:**
 ```
-$pagesInit[names;,;Zoe,Alice,Bob,Charlie]
+$!pagesInit[names;,;Zoe,Alice,Bob,Charlie]
 $sortPages[names;asc]
 $pagesList[names;1;10]
 $c[Returns: "Alice,Bob,Charlie,Zoe" - Sorted alphabetically ascending]
@@ -193,7 +193,7 @@ Advanced sort for page store entries using custom comparison logic.
 
 **Example:**
 ```
-$pagesInit[words;,;Cat,Elephant,Dog,Fish]
+$!pagesInit[words;,;Cat,Elephant,Dog,Fish]
 $advancedSortPages[words;w1;w2;$sub[$len[$env[w1]];$len[$env[w2]]]]
 $pagesList[words;1;10]
 $c[Returns: "Cat,Dog,Fish,Elephant" - Sorted by string length (shortest first)]
