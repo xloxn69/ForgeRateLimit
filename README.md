@@ -199,32 +199,6 @@ $pagesList[words;1;10]
 $c[Returns: "Cat,Dog,Fish,Elephant" - Sorted by string length (shortest first)]
 ```
 
-
-
-## Complete Usage Example
-
-```
-$c[Complete workflow example]
-$pagesInit[users;,;Alice,Bob,Charlie,David,Eve,Frank,Grace,Henry,Ivan,Jack]
-$addPageData[users;Kate,Liam,Maya,Noah,Olivia]
-$sortPages[users;asc]
-
-$c[Display pagination info]
-Total users: $len[$split[$pagesList[users;1;100];,]]
-Total pages (4 per page): $pageCount[users;4]
-Page 1: $pagesList[users;1;4]
-Page 2: $pagesList[users;2;4]
-
-$c[Search and modify]
-Maya is on page: $searchPages[users;Maya;4]
-$removePageEntry[users;5]
-$c[After removing 5th user, page 2 is now: $pagesList[users;2;4]]
-```
-$advancedSortPages[items;x;y;$sub[$charCount[$env[x]];$charCount[$env[y]]]]
-
-
-```
-
 ## Support
 If you need any assistance, don't hesitate to reach out by opening a support form in the official BotForge Discord server! :D
 

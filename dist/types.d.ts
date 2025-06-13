@@ -4,6 +4,8 @@ export interface PageStore {
 }
 declare module "@tryforge/forgescript" {
     interface ForgeClient {
+        /** Map<storeID, PageStore> */
         pageStores?: Map<string, PageStore>;
     }
 }
+//# sourceMappingURL=types.d.ts.map

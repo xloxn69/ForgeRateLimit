@@ -8,3 +8,4 @@ export declare class ForgePages extends ForgeExtension {
     init(client: ForgeClient): void;
 }
 export default ForgePages;
+//# sourceMappingURL=index.d.ts.map

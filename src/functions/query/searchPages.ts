@@ -64,7 +64,7 @@ export default new NativeFunction({
       // bind this entry to $env[varName]
       ctx.setEnvironmentKey(varName, entry);
 
-      // run the user's snippet
+      // run the user's snippet - use the raw code field like $arrayMap does
       const rt: Return = (await this["resolveCode"](ctx, codeField)) as Return;
       
       // if code used $return, collect the returned value

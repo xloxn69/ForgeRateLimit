@@ -4,7 +4,7 @@ const forgescript_1 = require("@tryforge/forgescript");
 exports.default = new forgescript_1.NativeFunction({
     name: "$advancedSearchPages",
     version: "1.0.0",
-    description: "Loops through each entry in a paging store (bound to your variable), runs your code snippet, and returns all entries where it returned true.",
+    description: "Maps through each entry in a paging store, runs code for each entry, and returns all results joined by separator.",
     brackets: true,
     unwrap: false,
     output: forgescript_1.ArgType.String,
@@ -25,16 +25,9 @@ exports.default = new forgescript_1.NativeFunction({
         },
         {
             name: "code",
-            description: "ForgeScript code to execute for each entry (must return true/false)",
+            description: "ForgeScript code to execute for each entry (use $return to output values)",
             type: forgescript_1.ArgType.String,
             required: true,
-            rest: false
-        },
-        {
-            name: "per",
-            description: "Optional items‐per‐page (currently unused—just for API consistency)",
-            type: forgescript_1.ArgType.Number,
-            required: false,
             rest: false
         }
     ],
@@ -55,21 +48,23 @@ exports.default = new forgescript_1.NativeFunction({
         const store = ctx.client.pageStores?.get(storeId);
         if (!store)
             return this.customError(`Store "${storeId}" not found`);
-        const hits = [];
+        const results = [];
         // iterate every entry
         for (const entry of store.data) {
             // bind this entry to $env[varName]
             ctx.setEnvironmentKey(varName, entry);
-            // run the user's snippet
+            // run the user's snippet - use the raw code field like $arrayMap does
             const rt = (await this["resolveCode"](ctx, codeField));
-            if (!this["isValidReturnType"](rt))
+            // if code used $return, collect the returned value
+            if (rt.return) {
+                results.push(String(rt.value));
+            }
+            else if (!this["isValidReturnType"](rt)) {
                 return rt;
-            // collect only those where snippet returned true
-            if (rt.value === true)
-                hits.push(entry);
+            }
         }
-        // return the filtered entries joined by the store's separator
-        return this.success(hits.join(store.sep));
+        // return the results joined by the store's separator
+        return this.success(results.join(store.sep));
     }
 });
 //# sourceMappingURL=searchPages.js.map
