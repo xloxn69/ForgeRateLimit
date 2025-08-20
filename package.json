@@ -1,25 +1,27 @@
 {
-  "name": "forgepages",
+  "name": "forge-ratelimit",
   "version": "1.0.0",
-  "description": "Light-weight paging helpers for @tryforge/forgescript.",
+  "description": "Comprehensive rate limiting and queueing system for @tryforge/forgescript.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": "xloxn69",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/xloxn69/ForgePages.git"
+    "url": "https://github.com/xloxn69/ForgeRateLimit.git"
   },
-  "homepage": "https://github.com/xloxn69/ForgePages",
+  "homepage": "https://github.com/xloxn69/ForgeRateLimit",
   "bugs": {
-    "url": "https://github.com/xloxn69/ForgePages/issues"
+    "url": "https://github.com/xloxn69/ForgeRateLimit/issues"
   },
   "keywords": [
     "forgescript",
     "tryforge",
     "botforge",
-    "pagination",
-    "paging"
+    "ratelimit",
+    "queueing",
+    "tokens",
+    "buckets"
   ],
   "scripts": {
     "build": "tsc",
