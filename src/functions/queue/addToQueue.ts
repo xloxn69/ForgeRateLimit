@@ -31,8 +31,8 @@ export default new NativeFunction({
     if (!this["isValidReturnType"](jobData)) return jobData;
 
     // Get rate limiting stores from client
-    const queues = ctx.client.rateLimitQueues || new Map();
-    const policy = ctx.client.rateLimitPolicy;
+    const queues = (ctx.client as any).rateLimitQueues || new Map();
+    const policy = (ctx.client as any).rateLimitPolicy;
 
     if (!policy) {
       return this.success(false);

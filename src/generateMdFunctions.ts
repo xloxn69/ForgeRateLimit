@@ -1,28 +1,20 @@
 // Import functions directly
-import pagesInit from "./functions/pagesInit.js";
-import addPageData from "./functions/core/addPageData.js";
-import removePageEntry from "./functions/core/removePageEntry.js";
-import pagesList from "./functions/query/pagesList.js";
-import pagesSlice from "./functions/query/pagesSlice.js";
-import pageCount from "./functions/query/pageCount.js";
-import searchPages from "./functions/query/basicSearchPages.js";
-import advancedSearchPages from "./functions/query/searchPages.js";
-import sortPages from "./functions/util/sortPages.js";
-import advancedSortPages from "./functions/util/advancedSortPages.js";
+import estimateCost from "./functions/core/estimateCost.js";
+import reserveTokens from "./functions/core/reserveTokens.js";
+import refundTokens from "./functions/core/refundTokens.js";
+import getBucketInfo from "./functions/buckets/getBucketInfo.js";
+import addToQueue from "./functions/queue/addToQueue.js";
+import getRateLimitStats from "./functions/monitoring/getRateLimitStats.js";
 import { writeFileSync } from "fs";
 import path from "path";
 
 const functions = [
-  pagesInit,
-  addPageData,
-  removePageEntry,
-  pagesList,
-  pagesSlice,
-  pageCount,
-  searchPages,
-  advancedSearchPages,
-  sortPages,
-  advancedSortPages
+  estimateCost,
+  reserveTokens,
+  refundTokens,
+  getBucketInfo,
+  addToQueue,
+  getRateLimitStats
 ];
 
 const lines: string[] = [

@@ -25,9 +25,9 @@ exports.default = new forgescript_1.NativeFunction({
             activeBuckets: Array.from(buckets.keys()).filter(key => key !== 'global').length,
             policy: policy.name,
             bucketBreakdown: {
-                guild: Array.from(buckets.keys()).filter(k => k.startsWith('guild_')).length,
-                user: Array.from(buckets.keys()).filter(k => k.startsWith('user_')).length,
-                flow: Array.from(buckets.keys()).filter(k => k.startsWith('flow_')).length
+                guild: Array.from(buckets.keys()).filter((k) => String(k).startsWith('guild_')).length,
+                user: Array.from(buckets.keys()).filter((k) => String(k).startsWith('user_')).length,
+                flow: Array.from(buckets.keys()).filter((k) => String(k).startsWith('flow_')).length
             }
         };
         return this.success(JSON.stringify(stats));

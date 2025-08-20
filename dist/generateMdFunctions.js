@@ -4,29 +4,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 // Import functions directly
-const pagesInit_js_1 = __importDefault(require("./functions/pagesInit.js"));
-const addPageData_js_1 = __importDefault(require("./functions/core/addPageData.js"));
-const removePageEntry_js_1 = __importDefault(require("./functions/core/removePageEntry.js"));
-const pagesList_js_1 = __importDefault(require("./functions/query/pagesList.js"));
-const pagesSlice_js_1 = __importDefault(require("./functions/query/pagesSlice.js"));
-const pageCount_js_1 = __importDefault(require("./functions/query/pageCount.js"));
-const basicSearchPages_js_1 = __importDefault(require("./functions/query/basicSearchPages.js"));
-const searchPages_js_1 = __importDefault(require("./functions/query/searchPages.js"));
-const sortPages_js_1 = __importDefault(require("./functions/util/sortPages.js"));
-const advancedSortPages_js_1 = __importDefault(require("./functions/util/advancedSortPages.js"));
+const estimateCost_js_1 = __importDefault(require("./functions/core/estimateCost.js"));
+const reserveTokens_js_1 = __importDefault(require("./functions/core/reserveTokens.js"));
+const refundTokens_js_1 = __importDefault(require("./functions/core/refundTokens.js"));
+const getBucketInfo_js_1 = __importDefault(require("./functions/buckets/getBucketInfo.js"));
+const addToQueue_js_1 = __importDefault(require("./functions/queue/addToQueue.js"));
+const getRateLimitStats_js_1 = __importDefault(require("./functions/monitoring/getRateLimitStats.js"));
 const fs_1 = require("fs");
 const path_1 = __importDefault(require("path"));
 const functions = [
-    pagesInit_js_1.default,
-    addPageData_js_1.default,
-    removePageEntry_js_1.default,
-    pagesList_js_1.default,
-    pagesSlice_js_1.default,
-    pageCount_js_1.default,
-    basicSearchPages_js_1.default,
-    searchPages_js_1.default,
-    sortPages_js_1.default,
-    advancedSortPages_js_1.default
+    estimateCost_js_1.default,
+    reserveTokens_js_1.default,
+    refundTokens_js_1.default,
+    getBucketInfo_js_1.default,
+    addToQueue_js_1.default,
+    getRateLimitStats_js_1.default
 ];
 const lines = [
     "| Function | Description |",

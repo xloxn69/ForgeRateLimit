@@ -56,8 +56,8 @@ export default new NativeFunction({
     }
 
     // Get rate limiting stores from client
-    const buckets = ctx.client.rateLimitBuckets || new Map();
-    const policy = ctx.client.rateLimitPolicy;
+    const buckets = (ctx.client as any).rateLimitBuckets || new Map();
+    const policy = (ctx.client as any).rateLimitPolicy;
 
     if (!policy) {
       return this.success(false);

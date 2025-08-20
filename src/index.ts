@@ -10,25 +10,25 @@ export class ForgeRateLimit extends ForgeExtension {
   version = "1.0.0";
 
   private instance!: ForgeClient;
-  private buckets = new Map();
+  private buckets = new Map<string, any>();
   private policy: any;
 
   init(client: ForgeClient): void {
     this.instance = client;
     
     // Initialize rate limiting stores
-    if (!client.rateLimitBuckets) client.rateLimitBuckets = new Map();
-    if (!client.rateLimitQueues) client.rateLimitQueues = new Map();
-    if (!client.rateLimitRuns) client.rateLimitRuns = new Map();
-    if (!client.rateLimitStats) client.rateLimitStats = new Map();
+    if (!(client as any).rateLimitBuckets) (client as any).rateLimitBuckets = new Map();
+    if (!(client as any).rateLimitQueues) (client as any).rateLimitQueues = new Map();
+    if (!(client as any).rateLimitRuns) (client as any).rateLimitRuns = new Map();
+    if (!(client as any).rateLimitStats) (client as any).rateLimitStats = new Map();
     
     // Set default balanced policy
-    if (!client.rateLimitPolicy) {
-      client.rateLimitPolicy = this.createBalancedPolicy();
+    if (!(client as any).rateLimitPolicy) {
+      (client as any).rateLimitPolicy = this.createBalancedPolicy();
     }
     
-    this.buckets = client.rateLimitBuckets;
-    this.policy = client.rateLimitPolicy;
+    this.buckets = (client as any).rateLimitBuckets;
+    this.policy = (client as any).rateLimitPolicy;
     
     // Initialize global buckets
     this.initializeBuckets();

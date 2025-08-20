@@ -1,12 +1,26 @@
-{
-  "functions": [
-    { "name": "$pagesInit", "version": "1.0.0", "description": "Create/overwrite a store" },
-    { "name": "$pagesList", "version": "1.0.0", "description": "Get a page" },
-    { "name": "$pagesSlice", "version": "1.0.0", "description": "Get any slice" },
-    { "name": "$pageCount", "version": "1.0.0", "description": "Total pages" },
-    { "name": "$addPageData", "version": "1.0.0", "description": "Append items" },
-    { "name": "$removePageEntry", "version": "1.0.0", "description": "Delete by index" },
-    { "name": "$sortPages", "version": "1.0.0", "description": "Sort asc/desc" },
-    { "name": "$searchPages", "version": "1.0.0", "description": "Locate query's page" }
-  ]
-} 
+[
+  {
+    "name": "$estimateCost",
+    "description": "Estimates the token cost for a list of actions"
+  },
+  {
+    "name": "$reserveTokens", 
+    "description": "Reserves tokens from buckets for rate limiting"
+  },
+  {
+    "name": "$refundTokens",
+    "description": "Refunds tokens to buckets after operation completion"
+  },
+  {
+    "name": "$getBucketInfo",
+    "description": "Gets information about a rate limiting bucket"
+  },
+  {
+    "name": "$addToQueue",
+    "description": "Adds a job to the rate limiting queue"
+  },
+  {
+    "name": "$getRateLimitStats",
+    "description": "Gets comprehensive rate limiting statistics"
+  }
+]

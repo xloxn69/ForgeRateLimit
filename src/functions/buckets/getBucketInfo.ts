@@ -31,8 +31,8 @@ export default new NativeFunction({
     if (!this["isValidReturnType"](id)) return id;
 
     // Get rate limiting stores from client
-    const buckets = ctx.client.rateLimitBuckets || new Map();
-    const policy = ctx.client.rateLimitPolicy;
+    const buckets = (ctx.client as any).rateLimitBuckets || new Map();
+    const policy = (ctx.client as any).rateLimitPolicy;
 
     if (!policy) {
       ctx.setEnvironmentKey("bucketExists", "false");

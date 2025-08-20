@@ -10,8 +10,8 @@ export default new NativeFunction({
   args: [],
   async execute(ctx) {
     // Get rate limiting stores from client
-    const buckets = ctx.client.rateLimitBuckets || new Map();
-    const policy = ctx.client.rateLimitPolicy;
+    const buckets = (ctx.client as any).rateLimitBuckets || new Map();
+    const policy = (ctx.client as any).rateLimitPolicy;
 
     if (!policy) {
       return this.success(JSON.stringify({
@@ -26,9 +26,9 @@ export default new NativeFunction({
       activeBuckets: Array.from(buckets.keys()).filter(key => key !== 'global').length,
       policy: policy.name,
       bucketBreakdown: {
-        guild: Array.from(buckets.keys()).filter(k => k.startsWith('guild_')).length,
-        user: Array.from(buckets.keys()).filter(k => k.startsWith('user_')).length,
-        flow: Array.from(buckets.keys()).filter(k => k.startsWith('flow_')).length
+        guild: Array.from(buckets.keys()).filter((k: unknown) => String(k).startsWith('guild_')).length,
+        user: Array.from(buckets.keys()).filter((k: unknown) => String(k).startsWith('user_')).length,
+        flow: Array.from(buckets.keys()).filter((k: unknown) => String(k).startsWith('flow_')).length
       }
     };
     

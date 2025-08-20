@@ -1,6 +1,6 @@
 import { NativeFunction, ArgType } from "@tryforge/forgescript";
 
-const ACTION_COSTS = {
+const ACTION_COSTS: Record<string, number> = {
   send_message: 1,
   send_embed: 2,
   role_edit: 2,
@@ -32,7 +32,7 @@ export default new NativeFunction({
     const actions = await this["resolveUnhandledArg"](ctx, 0);
     if (!this["isValidReturnType"](actions)) return actions;
 
-    const actionList = actions.value.split(',').map(a => a.trim());
+    const actionList = actions.value.split(',').map((a: string) => a.trim());
     let totalCost = 0;
 
     for (const action of actionList) {
