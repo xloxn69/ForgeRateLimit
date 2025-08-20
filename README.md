@@ -25,35 +25,66 @@ npm install github:xloxn69/ForgeRateLimit
 const { ForgeClient } = require("@tryforge/forgescript");
 const { ForgeRateLimit } = require("forge-ratelimit");
 
+const rateLimit = new ForgeRateLimit({
+    events: ["tokenReserved", "throttled", "circuitBreaker"] // Optional events to load
+});
+
 const client = new ForgeClient({
-    extensions: [
-        new ForgeRateLimit({
-            events: ["tokenReserved", "throttled", "circuitBreaker"] // Optional events
-        })
-    ]
+    extensions: [rateLimit],
+    events: ["ready", "messageCreate", "tokenReserved", "throttled", "circuitBreaker"], // Include rate limit events
+    intents: ["Guilds", "GuildMessages", "MessageContent"],
+    prefixes: ["!"]
 });
 ```
 
 ## Event System
 
-ForgeRateLimit emits events that you can listen to in your bot:
+ForgeRateLimit emits events that you can listen to in your bot. Events are triggered automatically when rate limiting occurs.
 
+### Setting Up Events
+
+1. **Include events in extension options:**
 ```javascript
-// In your bot setup
-const rateLimitExtension = new ForgeRateLimit({
+const rateLimit = new ForgeRateLimit({
     events: ["tokenReserved", "throttled", "queued", "circuitBreaker", "surgeGuard"]
 });
+```
 
-// Add event handlers
-rateLimitExtension.commands.add({
-    type: "throttled",
-    code: `$log[⚠️ Throttled: $throttleReason - ETA: $eventData[eta]s]`
+2. **Add event names to ForgeClient events array:**
+```javascript
+const client = new ForgeClient({
+    extensions: [rateLimit],
+    events: ["ready", "messageCreate", "tokenReserved", "throttled", "queued", "circuitBreaker", "surgeGuard"],
+    // ... other options
 });
+```
 
-rateLimitExtension.commands.add({
-    type: "circuitBreaker", 
-    code: `$log[🔥 Circuit breaker $eventData[action] for flow $eventData[flowId]]`
-});
+3. **Create event handler files in your bot's `events/` directory:**
+
+**events/tokenReserved.js:**
+```javascript
+module.exports = {
+    name: "tokenReserved",
+    code: `$log[🎟️ Tokens reserved: $eventData[tokensReserved] for flow $eventData[flowId]]`
+};
+```
+
+**events/throttled.js:**
+```javascript
+module.exports = {
+    name: "throttled", 
+    code: `$log[⚠️ Throttled: $throttleReason - ETA: $eventData[eta]s]
+$sendMessage[CHANNEL_ID;Rate limit hit! Reason: $throttleReason]`
+};
+```
+
+**events/circuitBreaker.js:**
+```javascript
+module.exports = {
+    name: "circuitBreaker",
+    code: `$log[🔥 Circuit breaker $eventData[action] for flow $eventData[flowId]]
+$sendMessage[CHANNEL_ID;⚡ Flow $eventData[flowId] circuit breaker activated: $eventData[reason]]`
+};
 ```
 
 ## Functions
@@ -365,16 +396,102 @@ ForgeRateLimit uses a **Balanced** policy by default with these limits:
 3. **Messaging** (Priority 3) - send_message, send_embed
 4. **Heavy** (Priority 4) - http_request
 
-### Events Available
-- `tokenReserved` - When tokens are successfully reserved
-- `tokenRefunded` - When tokens are refunded after completion
-- `bucketRefilled` - When buckets get refilled
-- `throttled` - When a request is throttled with reason
-- `queued` - When a request is added to queue
-- `queueExecuted` - When a queued request starts execution
-- `circuitBreaker` - When a flow gets auto-paused due to high error rate
-- `surgeGuard` - When system enters/exits degraded state
-- `policyChanged` - When rate limiting policy is updated
+## Complete Events Reference
+
+ForgeRateLimit provides **9 event types** that trigger automatically during rate limiting operations:
+
+### Available Events
+
+#### `tokenReserved`
+Triggered when tokens are successfully reserved from buckets.
+- **Event Data**: `tokensReserved`, `flowId`, `guildId`, `userId`, `actionType`, `remainingTokens`
+- **When**: After successful `$reserveTokens` call
+
+#### `tokenRefunded` 
+Triggered when tokens are refunded back to buckets.
+- **Event Data**: `tokensRefunded`, `flowId`, `guildId`, `userId`, `actionType`, `newTokenCount`
+- **When**: After `$refundTokens` call or automatic refund
+
+#### `bucketRefilled`
+Triggered when token buckets are automatically refilled.
+- **Event Data**: `bucketKey`, `tokensAdded`, `currentTokens`, `capacity`
+- **When**: During automatic bucket refill process (every second)
+
+#### `throttled`
+Triggered when a request is rate limited and blocked.
+- **Event Data**: `flowId`, `guildId`, `userId`, `actionType`, `retryAfter`, `eta`
+- **When**: When `$reserveTokens` fails due to insufficient tokens
+- **Special**: Use `$throttleReason` to get detailed reason
+
+#### `queued`
+Triggered when a request is added to the rate limiting queue.
+- **Event Data**: `flowId`, `guildId`, `userId`, `actionType`, `queuePosition`, `eta`, `priority`
+- **When**: After successful `$addToQueue` call
+
+#### `queueExecuted`
+Triggered when a queued request starts execution.
+- **Event Data**: `flowId`, `guildId`, `userId`, `actionType`, `waitTime`, `result`
+- **When**: After `$processQueue` selects and executes a job
+
+#### `circuitBreaker`
+Triggered when circuit breaker state changes for a flow.
+- **Event Data**: `flowId`, `guildId`, `state`, `reason`, `duration`, `action`
+- **When**: Circuit breaker opens, closes, or goes half-open
+
+#### `surgeGuard`
+Triggered when surge protection activates or deactivates.
+- **Event Data**: `guildId`, `p95WaitTime`, `threshold`, `queueSize`, `state`
+- **When**: System detects high queue wait times
+
+#### `policyChanged`
+Triggered when rate limiting policy is updated.
+- **Event Data**: `oldPolicy`, `newPolicy`, `changedBy`, `guildId`
+- **When**: Rate limiting policy configuration changes
+
+### Event Handler Examples
+
+**Complete monitoring setup:**
+```javascript
+// events/tokenReserved.js
+module.exports = {
+    name: "tokenReserved",
+    code: `$log[✅ Reserved $eventData[tokensReserved] tokens for $eventData[actionType] in flow $eventData[flowId]]`
+};
+
+// events/throttled.js  
+module.exports = {
+    name: "throttled",
+    code: `$log[🔴 THROTTLED: $throttleReason - Retry in $eventData[retryAfter]ms]
+$sendMessage[ADMIN_CHANNEL;⚠️ **Rate Limited**
+Flow: \`$eventData[flowId]\`
+Reason: $throttleReason
+ETA: $eventData[eta]s]`
+};
+
+// events/circuitBreaker.js
+module.exports = {
+    name: "circuitBreaker", 
+    code: `$log[⚡ Circuit breaker $eventData[action]: $eventData[flowId] ($eventData[reason])]
+$if[$eventData[action]==opened]
+$sendMessage[ADMIN_CHANNEL;🚨 **Circuit Breaker Opened**
+Flow: \`$eventData[flowId]\`
+Reason: $eventData[reason]
+Duration: $eventData[duration]ms]
+$endif`
+};
+
+// events/surgeGuard.js
+module.exports = {
+    name: "surgeGuard",
+    code: `$log[🌊 Surge guard active - P95: $eventData[p95WaitTime]ms]
+$if[$eventData[state]==activated]
+$sendMessage[ADMIN_CHANNEL;🌊 **Surge Protection Activated**
+Guild: $eventData[guildId]
+Queue wait P95: $eventData[p95WaitTime]ms
+Threshold: $eventData[threshold]ms]
+$endif`
+};
+```
 
 ## Examples
 
