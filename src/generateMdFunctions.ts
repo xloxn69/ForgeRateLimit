@@ -5,6 +5,11 @@ import refundTokens from "./functions/core/refundTokens.js";
 import getBucketInfo from "./functions/buckets/getBucketInfo.js";
 import addToQueue from "./functions/queue/addToQueue.js";
 import getRateLimitStats from "./functions/monitoring/getRateLimitStats.js";
+import eventData from "./functions/events/eventData.js";
+import throttleReason from "./functions/events/throttleReason.js";
+import eventTimestamp from "./functions/events/eventTimestamp.js";
+import openCircuitBreaker from "./functions/circuitBreaker/openCircuitBreaker.js";
+import checkCircuitBreaker from "./functions/circuitBreaker/checkCircuitBreaker.js";
 import { writeFileSync } from "fs";
 import path from "path";
 
@@ -14,7 +19,12 @@ const functions = [
   refundTokens,
   getBucketInfo,
   addToQueue,
-  getRateLimitStats
+  getRateLimitStats,
+  eventData,
+  throttleReason,
+  eventTimestamp,
+  openCircuitBreaker,
+  checkCircuitBreaker
 ];
 
 const lines: string[] = [

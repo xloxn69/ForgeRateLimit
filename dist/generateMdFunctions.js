@@ -10,6 +10,11 @@ const refundTokens_js_1 = __importDefault(require("./functions/core/refundTokens
 const getBucketInfo_js_1 = __importDefault(require("./functions/buckets/getBucketInfo.js"));
 const addToQueue_js_1 = __importDefault(require("./functions/queue/addToQueue.js"));
 const getRateLimitStats_js_1 = __importDefault(require("./functions/monitoring/getRateLimitStats.js"));
+const eventData_js_1 = __importDefault(require("./functions/events/eventData.js"));
+const throttleReason_js_1 = __importDefault(require("./functions/events/throttleReason.js"));
+const eventTimestamp_js_1 = __importDefault(require("./functions/events/eventTimestamp.js"));
+const openCircuitBreaker_js_1 = __importDefault(require("./functions/circuitBreaker/openCircuitBreaker.js"));
+const checkCircuitBreaker_js_1 = __importDefault(require("./functions/circuitBreaker/checkCircuitBreaker.js"));
 const fs_1 = require("fs");
 const path_1 = __importDefault(require("path"));
 const functions = [
@@ -18,7 +23,12 @@ const functions = [
     refundTokens_js_1.default,
     getBucketInfo_js_1.default,
     addToQueue_js_1.default,
-    getRateLimitStats_js_1.default
+    getRateLimitStats_js_1.default,
+    eventData_js_1.default,
+    throttleReason_js_1.default,
+    eventTimestamp_js_1.default,
+    openCircuitBreaker_js_1.default,
+    checkCircuitBreaker_js_1.default
 ];
 const lines = [
     "| Function | Description |",

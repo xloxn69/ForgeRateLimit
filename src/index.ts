@@ -1,8 +1,15 @@
 import {
   ForgeExtension,
-  ForgeClient
+  ForgeClient,
+  EventManager
 } from "@tryforge/forgescript";
+import { TypedEmitter } from "tiny-typed-emitter";
+import { IRateLimitEvents, RateLimitCommandManager } from "./structures";
 import "./types.js";                // patches ForgeClient typing (no runtime code)
+
+export type TransformEvents<T> = {
+  [P in keyof T]: T[P] extends any[] ? (...args: T[P]) => any : never;
+};
 
 export class ForgeRateLimit extends ForgeExtension {
   name = "ForgeRateLimit";
@@ -12,9 +19,21 @@ export class ForgeRateLimit extends ForgeExtension {
   private instance!: ForgeClient;
   private buckets = new Map<string, any>();
   private policy: any;
+  public commands!: RateLimitCommandManager;
+  public emitter = new TypedEmitter<TransformEvents<IRateLimitEvents>>();
+
+  constructor(public readonly options?: { events?: (keyof IRateLimitEvents)[] }) {
+    super();
+  }
 
   init(client: ForgeClient): void {
     this.instance = client;
+    
+    // Initialize command manager for events
+    this.commands = new RateLimitCommandManager(client);
+    
+    // Load events
+    EventManager.load('ForgeRateLimitEvents', __dirname + '/events');
     
     // Initialize rate limiting stores
     if (!(client as any).rateLimitBuckets) (client as any).rateLimitBuckets = new Map();
@@ -38,6 +57,11 @@ export class ForgeRateLimit extends ForgeExtension {
     
     // Load functions using ForgeExtension's built-in loader
     this.load(__dirname + "/functions");
+    
+    // Load events if specified
+    if (this.options?.events?.length) {
+      client.events.load("ForgeRateLimitEvents", this.options.events);
+    }
   }
 
   private createBalancedPolicy() {

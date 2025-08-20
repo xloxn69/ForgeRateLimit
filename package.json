@@ -27,6 +27,9 @@
     "build": "tsc",
     "docgen": "tsc && node dist/generateMdFunctions.js"
   },
+  "dependencies": {
+    "tiny-typed-emitter": "^2.1.0"
+  },
   "devDependencies": {
     "@tryforge/forgescript": "^2.3.0",
     "@types/node": "^20.10.6",

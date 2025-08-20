@@ -81,6 +81,20 @@ exports.default = new forgescript_1.NativeFunction({
         const globalBucket = buckets.get('global');
         if (!globalBucket || globalBucket.tokens < numCost) {
             const eta = globalBucket ? Math.ceil((numCost - globalBucket.tokens) / policy.global.refillRate) : 60;
+            // Emit throttled event
+            const rateLimitExtension = ctx.client.getExtension?.("ForgeRateLimit");
+            if (rateLimitExtension?.emitter) {
+                rateLimitExtension.emitter.emit("throttled", {
+                    guildId: guildId.value,
+                    userId: userId.value,
+                    flowId: flowId.value,
+                    reason: "global_limit",
+                    cost: numCost,
+                    eta,
+                    scope: "global",
+                    timestamp: Date.now()
+                });
+            }
             ctx.setEnvironmentKey("rateLimitSuccess", "false");
             ctx.setEnvironmentKey("rateLimitReason", "global_limit");
             ctx.setEnvironmentKey("rateLimitEta", eta.toString());
@@ -133,6 +147,18 @@ exports.default = new forgescript_1.NativeFunction({
         guildBucket.tokens -= numCost;
         userBucket.tokens -= numCost;
         flowBucket.tokens -= numCost;
+        // Emit tokenReserved event
+        const rateLimitExtension = ctx.client.getExtension?.("ForgeRateLimit");
+        if (rateLimitExtension?.emitter) {
+            rateLimitExtension.emitter.emit("tokenReserved", {
+                guildId: guildId.value,
+                userId: userId.value,
+                flowId: flowId.value,
+                cost: numCost,
+                actionTypes: actionTypes?.value,
+                timestamp: Date.now()
+            });
+        }
         ctx.setEnvironmentKey("rateLimitSuccess", "true");
         ctx.setEnvironmentKey("rateLimitReserved", numCost.toString());
         ctx.setEnvironmentKey("rateLimitReason", "");

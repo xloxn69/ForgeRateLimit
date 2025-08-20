@@ -2,16 +2,29 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ForgeRateLimit = void 0;
 const forgescript_1 = require("@tryforge/forgescript");
+const tiny_typed_emitter_1 = require("tiny-typed-emitter");
+const structures_1 = require("./structures");
 require("./types.js"); // patches ForgeClient typing (no runtime code)
 class ForgeRateLimit extends forgescript_1.ForgeExtension {
+    options;
     name = "ForgeRateLimit";
     description = "Comprehensive rate limiting and queueing system for ForgeScript";
     version = "1.0.0";
     instance;
     buckets = new Map();
     policy;
+    commands;
+    emitter = new tiny_typed_emitter_1.TypedEmitter();
+    constructor(options) {
+        super();
+        this.options = options;
+    }
     init(client) {
         this.instance = client;
+        // Initialize command manager for events
+        this.commands = new structures_1.RateLimitCommandManager(client);
+        // Load events
+        forgescript_1.EventManager.load('ForgeRateLimitEvents', __dirname + '/events');
         // Initialize rate limiting stores
         if (!client.rateLimitBuckets)
             client.rateLimitBuckets = new Map();
@@ -33,6 +46,10 @@ class ForgeRateLimit extends forgescript_1.ForgeExtension {
         this.startRefillProcess();
         // Load functions using ForgeExtension's built-in loader
         this.load(__dirname + "/functions");
+        // Load events if specified
+        if (this.options?.events?.length) {
+            client.events.load("ForgeRateLimitEvents", this.options.events);
+        }
     }
     createBalancedPolicy() {
         return {
