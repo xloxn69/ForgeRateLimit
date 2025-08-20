@@ -160,8 +160,12 @@ export default new NativeFunction({
     flowBucket.tokens -= numCost;
 
     // Emit tokenReserved event
+    console.log("[DEBUG] Trying to emit tokenReserved event");
     const rateLimitExtension = (ctx.client as any).getExtension?.("ForgeRateLimit");
+    console.log("[DEBUG] Extension found:", !!rateLimitExtension);
+    console.log("[DEBUG] Emitter exists:", !!rateLimitExtension?.emitter);
     if (rateLimitExtension?.emitter) {
+      console.log("[DEBUG] Emitting tokenReserved event");
       rateLimitExtension.emitter.emit("tokenReserved", {
         guildId: guildId.value,
         userId: userId.value,
@@ -170,6 +174,9 @@ export default new NativeFunction({
         actionTypes: actionTypes?.value,
         timestamp: Date.now()
       });
+      console.log("[DEBUG] Event emitted successfully");
+    } else {
+      console.log("[DEBUG] Cannot emit - extension or emitter not found");
     }
 
     ctx.setEnvironmentKey("rateLimitSuccess", "true");
