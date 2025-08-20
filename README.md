@@ -1,22 +1,22 @@
-# ForgePages
+# ForgeRateLimit
 
-ForgePages is a extension built for ForgeScript, enabling you to easily create, manage, and navigate through paginated data directly in your bot.
+ForgeRateLimit is a comprehensive rate limiting and queueing system extension built for ForgeScript, enabling sophisticated token bucket rate limiting across multiple scopes.
 
 ## Installation
 
 ```bash
-npm install github:xloxn69/ForgePages
+npm install github:xloxn69/ForgeRateLimit
 ```
 
 ## Usage
 
 ```javascript
 const { ForgeClient } = require("@tryforge/forgescript");
-const ForgePages = require("forgepages");
+const { ForgeRateLimit } = require("forge-ratelimit");
 
 const client = new ForgeClient({
     extensions: [
-        new ForgePages()
+        new ForgeRateLimit()
     ]
 });
 ```
@@ -25,182 +25,178 @@ const client = new ForgeClient({
 
 ### Core Functions
 
-#### `$pagesInit[id;separator;rawData]`
-Creates or overwrites a pagination store with data split by separator.
+#### `$estimateCost[actions]`
+Estimates the token cost for a list of actions.
 
 **Parameters:**
-- `id` (String) - Store identifier
-- `separator` (String) - Separator to split data by
-- `rawData` (String) - Raw data string to split
+- `actions` (String) - Comma-separated list of action types
+
+**Returns:** Number (total estimated cost)
+
+**Example:**
+```
+$estimateCost[send_message,role_edit]
+$c[Returns: 3 - send_message (1) + role_edit (2) = 3 tokens]
+```
+
+#### `$reserveTokens[guildId;userId;flowId;cost;actionTypes?]`
+Reserves tokens from rate limiting buckets.
+
+**Parameters:**
+- `guildId` (String) - Guild ID
+- `userId` (String) - User ID  
+- `flowId` (String) - Flow ID
+- `cost` (Number) - Token cost
+- `actionTypes` (String, optional) - Action types
+
+**Returns:** Boolean (true if reservation successful)
+
+**Environment Variables Set:**
+- `$env[rateLimitSuccess]` - "true" or "false"
+- `$env[rateLimitReserved]` - Number of tokens reserved
+- `$env[rateLimitReason]` - Reason if failed
+- `$env[rateLimitEta]` - ETA in seconds until tokens available
+
+**Example:**
+```
+$reserveTokens[$guildId;$authorId;test-flow;3;send_message]
+$if[$env[rateLimitSuccess]==true]
+  Reserved: $env[rateLimitReserved] tokens
+$else
+  Blocked: $env[rateLimitReason] (ETA: $env[rateLimitEta]s)
+$endif
+```
+
+#### `$refundTokens[guildId;userId;flowId;amount]`
+Refunds tokens to buckets after operation completion.
+
+**Parameters:**
+- `guildId` (String) - Guild ID
+- `userId` (String) - User ID
+- `flowId` (String) - Flow ID
+- `amount` (Number) - Amount to refund
 
 **Returns:** Boolean (true if successful)
 
 **Example:**
 ```
-$pagesInit[users;,;Alice,Bob,Charlie,David,Eve]
-$c[Returns: true - Creates store "users" with 5 entries]
+$refundTokens[$guildId;$authorId;test-flow;1]
+$c[Returns: true - Refunded 1 token to all relevant buckets]
 ```
 
-#### `$addPageData[id;values]`
-Appends new entries to an existing store.
+### Bucket Functions
+
+#### `$getBucketInfo[scope;id?]`
+Gets information about a rate limiting bucket.
 
 **Parameters:**
-- `id` (String) - Store identifier
-- `values` (String) - Values to append (will be split by store's separator)
+- `scope` (String) - Bucket scope: "global", "guild", "user", "flow"
+- `id` (String, optional) - Bucket ID (format depends on scope)
 
-**Returns:** Boolean (true if successful)
+**Returns:** Boolean (true if bucket exists)
+
+**Environment Variables Set:**
+- `$env[bucketExists]` - "true" or "false"
+- `$env[bucketTokens]` - Current tokens
+- `$env[bucketCapacity]` - Maximum capacity
+- `$env[bucketFillPercentage]` - Fill percentage (0-100)
 
 **Example:**
 ```
-$!pagesInit[fruits;,;Apple,Banana]
-$!addPageData[fruits;Cherry,Date]
-$pagesList[fruits;1;10]
-$c[Returns: "Apple,Banana,Cherry,Date" - Added 2 new entries to store]
+$getBucketInfo[global]
+$if[$env[bucketExists]==true]
+  Global: $env[bucketTokens]/$env[bucketCapacity] ($env[bucketFillPercentage]%)
+$endif
 ```
 
-#### `$removePageEntry[id;index]`
-Removes one entry by 1-based index.
+### Queue Functions
+
+#### `$addToQueue[guildId;jobData]`
+Adds a job to the rate limiting queue.
 
 **Parameters:**
-- `id` (String) - Store identifier  
-- `index` (Number) - 1-based index to remove
+- `guildId` (String) - Guild ID
+- `jobData` (String) - Job data to queue
 
-**Returns:** Boolean (true if item was removed, false if index out of bounds)
+**Returns:** Boolean (true if successfully queued)
 
 **Example:**
 ```
-$!pagesInit[colors;,;Red,Green,Blue,Yellow]
-$!removePageEntry[colors;2]
-$pagesList[colors;1;10]
-$c[Returns: "Red,Blue,Yellow" - Removed "Green" (index 2)]
+$addToQueue[$guildId;{"action":"sendMessage","data":"Hello"}]
+$c[Returns: true - Job added to guild queue]
 ```
 
-### Query Functions
+### Monitoring Functions
 
-#### `$pagesList[id;page;itemsPerPage]`
-Returns a specific page of data.
+#### `$getRateLimitStats[]`
+Gets comprehensive rate limiting statistics.
 
-**Parameters:**
-- `id` (String) - Store identifier
-- `page` (Number) - Page number to get (1-based)
-- `itemsPerPage` (Number) - Items per page
-
-**Returns:** String (joined data using store's separator)
+**Returns:** String (JSON statistics)
 
 **Example:**
 ```
-$!pagesInit[items;,;Item1,Item2,Item3,Item4,Item5,Item6]
-$pagesList[items;2;3]
-$c[Returns: "Item4,Item5,Item6" - Page 2 with 3 items per page]
+$getRateLimitStats[]
+$c[Returns: {"totalBuckets":5,"globalTokens":950,"globalCapacity":1000,"activeBuckets":4}]
 ```
 
-#### `$pagesSlice[id;startIndex;count]`
-Returns an arbitrary slice of data from start index.
+## Rate Limiting Policies
 
-**Parameters:**
-- `id` (String) - Store identifier
-- `startIndex` (Number) - 1-based start index
-- `count` (Number) - Number of items to get
+ForgeRateLimit uses a **Balanced** policy by default with these limits:
 
-**Returns:** String (joined data using store's separator)
+### Token Buckets
+- **Global**: 1000 capacity, 10 tokens/sec refill
+- **Guild**: 150 capacity, 2.5 tokens/sec refill  
+- **User**: 30 capacity, 0.5 tokens/sec refill
+- **Flow**: 80 capacity, 1.33 tokens/sec refill
 
-**Example:**
+### Action Costs
+- `send_message`: 1 token
+- `send_embed`: 2 tokens
+- `role_edit`: 2 tokens
+- `timeout`: 3 tokens
+- `kick_ban`: 4 tokens
+- `create_delete`: 5 tokens
+- `http_request`: 3 tokens
+
+### Concurrency Limits
+- Max 12 concurrent runs per guild
+- Queue threshold: 15 seconds
+- Max queue size: 200 jobs
+
+## Examples
+
+### Basic Rate Limiting
 ```
-$!pagesInit[letters;,;A,B,C,D,E,F,G,H]
-$pagesSlice[letters;3;4]
-$c[Returns: "C,D,E,F" - 4 items starting from position 3]
-```
+$c[Check if we can send a message]
+$reserveTokens[$guildId;$authorId;welcome-flow;1;send_message]
 
-#### `$pageCount[id;itemsPerPage?]`
-Returns the total number of pages for given items per page.
-
-**Parameters:**
-- `id` (String) - Store identifier
-- `itemsPerPage` (Number, optional) - Items per page (default: 10)
-
-**Returns:** Number (total pages)
-
-**Example:**
-```
-$!pagesInit[data;,;1,2,3,4,5,6,7,8,9,10,11,12,13]
-$pageCount[data;5]
-$c[Returns: 3 - 13 items divided by 5 per page = 3 pages]
-```
-
-#### `$searchPages[id;query;itemsPerPage?]`
-Finds the page number where a search query first appears.
-
-**Parameters:**
-- `id` (String) - Store identifier
-- `query` (String) - Search query (case-insensitive)
-- `itemsPerPage` (Number, optional) - Items per page (default: 10)
-
-**Returns:** Number (page number, or 0 if not found)
-
-**Example:**
-```
-$!pagesInit[animals;,;Cat,Dog,Elephant,Fish,Giraffe,Horse]
-$searchPages[animals;Elephant;3]
-$c[Returns: 1 - "Elephant" found on page 1 with 3 items per page]
+$if[$env[rateLimitSuccess]==true]
+  $sendMessage[Welcome! You have been rate limited successfully.]
+$else
+  $sendMessage[Rate limited! Reason: $env[rateLimitReason]. Try again in $env[rateLimitEta] seconds.]
+$endif
 ```
 
-#### `$advancedSearchPages[id;variable;code]`
-Maps through each entry in a paging store, runs code for each entry, and returns all results joined by separator.
-
-**Parameters:**
-- `id` (String) - The store identifier
-- `variable` (String) - The name of the variable to assign each entry to (accessible as `$env[variable]`)
-- `code` (String) - ForgeScript code to execute for each entry (use $return to output values)
-
-**Returns:** String (all returned values joined by store's separator)
-
-**Example:**
+### Advanced Usage with Refunds
 ```
-$!pagesInit[numbers;,;1,2,3,4,5]
-$advancedSearchPages[numbers;num;$return[$math[$env[num] * 2]]]
-$c[Returns: "2,4,6,8,10" - Each number doubled using $return]
+$c[Reserve tokens for complex operation]
+$reserveTokens[$guildId;$authorId;mod-flow;7;timeout,send_embed]
+
+$if[$env[rateLimitSuccess]==true]
+  $c[Do the work - if it fails, we can refund]
+  $try[
+    $timeout[$mentioned[1];60000;Automated timeout]
+    $sendEmbed[Timeout applied successfully]
+  ]
+  $catch[
+    $c[Operation failed, refund tokens]
+    $refundTokens[$guildId;$authorId;mod-flow;7]
+    $sendMessage[Operation failed, tokens refunded]
+  ]
+$else
+  $sendMessage[Cannot perform action: $env[rateLimitReason]]
+$endif
 ```
-
-### Utility Functions
-
-#### `$sortPages[id;direction?]`
-Sorts the store data alphabetically.
-
-**Parameters:**
-- `id` (String) - Store identifier
-- `direction` (String, optional) - Sort direction: "asc" (default) or "desc"
-
-**Returns:** Boolean (true if successful)
-
-**Example:**
-```
-$!pagesInit[names;,;Zoe,Alice,Bob,Charlie]
-$!sortPages[names;asc]
-$pagesList[names;1;10]
-$c[Returns: "Alice,Bob,Charlie,Zoe" - Sorted alphabetically ascending]
-```
-
-#### `$advancedSortPages[id;var1;var2;code]`
-Advanced sort for page store entries using custom comparison logic.
-
-**Parameters:**
-- `id` (String) - The store identifier
-- `var1` (String) - The $env variable 1 to hold first comparison value
-- `var2` (String) - The $env variable 2 to hold second comparison value  
-- `code` (String) - Code to execute for comparison (should return number: negative if first < second, 0 if equal, positive if first > second)
-
-**Returns:** Boolean (true if successful)
-
-**Example:**
-```
-$!pagesInit[words;,;Cat,Elephant,Dog,Fish,Snake]
-$!advancedSortPages[words;w1;w2;$sub[$charCount[$env[w1]];$charCount[$env[w2]]]]
-$pagesList[words;1;10]
-$c[Returns: "Cat,Dog,Fish,Snake,Elephant" - Sorted by string length (shortest first)]
-```
-
-## Support
-If you need any assistance, don't hesitate to reach out by opening a support form in the official BotForge Discord server! :D
 
 ## License
 
