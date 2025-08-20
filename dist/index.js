@@ -81,6 +81,7 @@ class ForgeRateLimit extends forgescript_1.ForgeExtension {
 exports.ForgeRateLimit = ForgeRateLimit;
 // Also export as default and module.exports for compatibility
 exports.default = ForgeRateLimit;
-module.exports = ForgeRateLimit;
+module.exports = { ForgeRateLimit };
+module.exports.ForgeRateLimit = ForgeRateLimit;
 module.exports.default = ForgeRateLimit;
 //# sourceMappingURL=index.js.map

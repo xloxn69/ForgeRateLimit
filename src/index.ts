@@ -90,5 +90,6 @@ export class ForgeRateLimit extends ForgeExtension {
 
 // Also export as default and module.exports for compatibility
 export default ForgeRateLimit;
-module.exports = ForgeRateLimit;
+module.exports = { ForgeRateLimit };
+module.exports.ForgeRateLimit = ForgeRateLimit;
 module.exports.default = ForgeRateLimit; 
