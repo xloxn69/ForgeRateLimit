@@ -23,8 +23,8 @@ class ForgeRateLimit extends forgescript_1.ForgeExtension {
         this.instance = client;
         // Initialize command manager for events
         this.commands = new structures_1.RateLimitCommandManager(client);
-        // Load events
-        forgescript_1.EventManager.load('ForgeRateLimitEvents', __dirname + '/events');
+        // Load events (disabled - events loaded via options instead)
+        // EventManager.load('ForgeRateLimitEvents', __dirname + '/events');
         // Initialize rate limiting stores
         if (!client.rateLimitBuckets)
             client.rateLimitBuckets = new Map();
@@ -50,6 +50,87 @@ class ForgeRateLimit extends forgescript_1.ForgeExtension {
         if (this.options?.events?.length) {
             client.events.load("ForgeRateLimitEvents", this.options.events);
         }
+        // Load event commands from bot's events directory
+        this.loadEventCommands();
+        // Set up event listeners to connect emitter to ForgeScript commands
+        this.setupEventListeners(client);
+    }
+    eventCommands = new Map();
+    loadEventCommands() {
+        const events = ['tokenReserved', 'throttled', 'queued', 'circuitBreaker', 'surgeGuard', 'bucketRefilled', 'tokenRefunded', 'queueExecuted', 'policyChanged'];
+        const fs = require('fs');
+        const path = require('path');
+        // Try to find the bot's events directory
+        const possiblePaths = [
+            path.join(process.cwd(), 'events'),
+            path.join(__dirname, '../../../events'),
+            path.join(__dirname, '../../../../events')
+        ];
+        let eventsDir = null;
+        for (const dirPath of possiblePaths) {
+            if (fs.existsSync(dirPath)) {
+                eventsDir = dirPath;
+                break;
+            }
+        }
+        if (!eventsDir) {
+            console.log('[ForgeRateLimit] No events directory found, skipping event command loading');
+            return;
+        }
+        console.log(`[ForgeRateLimit] Loading event commands from: ${eventsDir}`);
+        events.forEach(eventName => {
+            const eventFile = path.join(eventsDir, `${eventName}.js`);
+            if (fs.existsSync(eventFile)) {
+                try {
+                    // Clear require cache to get fresh file
+                    delete require.cache[require.resolve(eventFile)];
+                    const eventCommand = require(eventFile);
+                    if (eventCommand && eventCommand.code) {
+                        console.log(`[ForgeRateLimit] Loading event command: ${eventName}`);
+                        // Compile the ForgeScript code
+                        const { Compiler } = require('@tryforge/forgescript');
+                        const compiled = Compiler.compile(eventCommand.code, eventName);
+                        // Store the compiled command
+                        this.eventCommands.set(eventName, {
+                            name: eventName,
+                            code: eventCommand.code,
+                            compiled: compiled
+                        });
+                        console.log(`[ForgeRateLimit] Successfully loaded event command: ${eventName}`);
+                    }
+                }
+                catch (error) {
+                    console.error(`[ForgeRateLimit] Error loading event command ${eventName}:`, error);
+                }
+            }
+        });
+    }
+    setupEventListeners(client) {
+        const events = ['tokenReserved', 'throttled', 'queued', 'circuitBreaker', 'surgeGuard', 'bucketRefilled', 'tokenRefunded', 'queueExecuted', 'policyChanged'];
+        events.forEach(eventName => {
+            this.emitter.on(eventName, (data) => {
+                console.log(`[ForgeRateLimit] Event ${eventName} triggered:`, data);
+                // Get the event command
+                const command = this.eventCommands.get(eventName);
+                console.log(`[ForgeRateLimit] Found command for ${eventName}:`, !!command);
+                if (command) {
+                    console.log(`[ForgeRateLimit] Executing command for ${eventName}`);
+                    // Create context with event data
+                    const mockContext = {
+                        obj: {},
+                        client,
+                        command,
+                        data: command.compiled.code,
+                        extras: data
+                    };
+                    // Execute the ForgeScript command
+                    const { Interpreter } = require('@tryforge/forgescript');
+                    Interpreter.run(mockContext).catch((err) => {
+                        console.error(`[ForgeRateLimit] Error executing ${eventName} command:`, err);
+                    });
+                }
+            });
+        });
     }
     createBalancedPolicy() {
         return {

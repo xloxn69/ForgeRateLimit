@@ -21,6 +21,9 @@ export declare class ForgeRateLimit extends ForgeExtension {
         events?: (keyof IRateLimitEvents)[];
     } | undefined);
     init(client: ForgeClient): void;
+    private eventCommands;
+    private loadEventCommands;
+    private setupEventListeners;
     private createBalancedPolicy;
     private initializeBuckets;
     private startRefillProcess;
