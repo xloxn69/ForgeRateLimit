@@ -11,3 +11,10 @@
 | `$eventTimestamp` | Returns the timestamp of the rate limiting event |
 | `$openCircuitBreaker` | Opens a circuit breaker for a specific flow to prevent execution |
 | `$checkCircuitBreaker` | Checks if a circuit breaker is open for a specific flow |
+| `$processQueue` | Processes queued jobs using weighted fair queuing by flow |
+| `$finishJob` | Marks a job as finished and removes it from running jobs |
+| `$checkSurgeGuard` | Checks and manages surge guard system for queue wait times |
+| `$setPriority` | Sets priority for an action (moderation > system > messaging > heavy) |
+| `$calculateETA` | Calculates ETA across multiple rate limiting buckets |
+| `$checkConcurrency` | Checks if concurrency limits allow execution |
+| `$startRun` | Starts a new run and tracks it in concurrency system |

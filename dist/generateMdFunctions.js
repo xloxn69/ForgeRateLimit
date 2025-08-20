@@ -15,6 +15,13 @@ const throttleReason_js_1 = __importDefault(require("./functions/events/throttle
 const eventTimestamp_js_1 = __importDefault(require("./functions/events/eventTimestamp.js"));
 const openCircuitBreaker_js_1 = __importDefault(require("./functions/circuitBreaker/openCircuitBreaker.js"));
 const checkCircuitBreaker_js_1 = __importDefault(require("./functions/circuitBreaker/checkCircuitBreaker.js"));
+const processQueue_js_1 = __importDefault(require("./functions/queue/processQueue.js"));
+const finishJob_js_1 = __importDefault(require("./functions/queue/finishJob.js"));
+const checkSurgeGuard_js_1 = __importDefault(require("./functions/surgeGuard/checkSurgeGuard.js"));
+const setPriority_js_1 = __importDefault(require("./functions/priority/setPriority.js"));
+const calculateETA_js_1 = __importDefault(require("./functions/core/calculateETA.js"));
+const checkConcurrency_js_1 = __importDefault(require("./functions/concurrency/checkConcurrency.js"));
+const startRun_js_1 = __importDefault(require("./functions/concurrency/startRun.js"));
 const fs_1 = require("fs");
 const path_1 = __importDefault(require("path"));
 const functions = [
@@ -28,7 +35,14 @@ const functions = [
     throttleReason_js_1.default,
     eventTimestamp_js_1.default,
     openCircuitBreaker_js_1.default,
-    checkCircuitBreaker_js_1.default
+    checkCircuitBreaker_js_1.default,
+    processQueue_js_1.default,
+    finishJob_js_1.default,
+    checkSurgeGuard_js_1.default,
+    setPriority_js_1.default,
+    calculateETA_js_1.default,
+    checkConcurrency_js_1.default,
+    startRun_js_1.default
 ];
 const lines = [
     "| Function | Description |",

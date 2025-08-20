@@ -83,8 +83,15 @@ export class ForgeRateLimit extends ForgeExtension {
       },
       concurrency: {
         maxRunsPerGuild: 12,
+        maxRunsPerFlow: 4,
         queueThreshold: 15,
         maxQueueSize: 200
+      },
+      priorityClasses: {
+        moderation: 1,
+        system: 2,
+        messaging: 3,
+        heavy: 4
       }
     };
   }

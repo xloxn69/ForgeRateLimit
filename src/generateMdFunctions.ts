@@ -10,6 +10,13 @@ import throttleReason from "./functions/events/throttleReason.js";
 import eventTimestamp from "./functions/events/eventTimestamp.js";
 import openCircuitBreaker from "./functions/circuitBreaker/openCircuitBreaker.js";
 import checkCircuitBreaker from "./functions/circuitBreaker/checkCircuitBreaker.js";
+import processQueue from "./functions/queue/processQueue.js";
+import finishJob from "./functions/queue/finishJob.js";
+import checkSurgeGuard from "./functions/surgeGuard/checkSurgeGuard.js";
+import setPriority from "./functions/priority/setPriority.js";
+import calculateETA from "./functions/core/calculateETA.js";
+import checkConcurrency from "./functions/concurrency/checkConcurrency.js";
+import startRun from "./functions/concurrency/startRun.js";
 import { writeFileSync } from "fs";
 import path from "path";
 
@@ -24,7 +31,14 @@ const functions = [
   throttleReason,
   eventTimestamp,
   openCircuitBreaker,
-  checkCircuitBreaker
+  checkCircuitBreaker,
+  processQueue,
+  finishJob,
+  checkSurgeGuard,
+  setPriority,
+  calculateETA,
+  checkConcurrency,
+  startRun
 ];
 
 const lines: string[] = [

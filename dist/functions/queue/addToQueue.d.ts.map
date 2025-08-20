@@ -1,1 +1,1 @@
-{"version":3,"file":"addToQueue.d.ts","sourceRoot":"","sources":["../../../src/functions/queue/addToQueue.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,cAAc,EAAE,OAAO,EAAE,MAAM,uBAAuB,CAAC;;;;;;;;;;;;;;AAEhE,wBA4DG"}
+{"version":3,"file":"addToQueue.d.ts","sourceRoot":"","sources":["../../../src/functions/queue/addToQueue.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,cAAc,EAAE,OAAO,EAAE,MAAM,uBAAuB,CAAC;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAEhE,wBAyHG"}
