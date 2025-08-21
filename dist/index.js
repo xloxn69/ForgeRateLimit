@@ -115,19 +115,33 @@ class ForgeRateLimit extends forgescript_1.ForgeExtension {
                 console.log(`[ForgeRateLimit] Found command for ${eventName}:`, !!command);
                 if (command) {
                     console.log(`[ForgeRateLimit] Executing command for ${eventName}`);
-                    // Create context with event data
-                    const mockContext = {
-                        obj: {},
-                        client,
-                        command,
-                        data: command.compiled.code,
-                        extras: data
-                    };
-                    // Execute the ForgeScript command
-                    const { Interpreter } = require('@tryforge/forgescript');
-                    Interpreter.run(mockContext).catch((err) => {
-                        console.error(`[ForgeRateLimit] Error executing ${eventName} command:`, err);
-                    });
+                    try {
+                        // Execute the ForgeScript command with proper context
+                        const { Interpreter } = require('@tryforge/forgescript');
+                        Interpreter.run({
+                            obj: {
+                                guild: null,
+                                user: { id: data.userId || 'unknown' },
+                                member: null,
+                                channel: null,
+                                message: null
+                            },
+                            client,
+                            command,
+                            data: command.compiled.code,
+                            extras: data,
+                            environment: new Map([
+                                ['eventData', JSON.stringify(data)],
+                                ['eventTimestamp', data.timestamp?.toString() || Date.now().toString()],
+                                ['throttleReason', data.reason || '']
+                            ])
+                        }).catch((err) => {
+                            console.error(`[ForgeRateLimit] Error executing ${eventName} command:`, err);
+                        });
+                    }
+                    catch (err) {
+                        console.error(`[ForgeRateLimit] Failed to execute ${eventName} command:`, err);
+                    }
                 }
             });
         });

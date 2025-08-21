@@ -11,7 +11,7 @@ export default new RateLimitEventHandler({
 
         for (const command of commands) {
             Interpreter.run({
-                obj: {},
+                obj: { guild: null, user: null, member: null, channel: null, message: null },
                 client: this,
                 command,
                 data: command.compiled.code,

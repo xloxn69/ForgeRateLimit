@@ -11,7 +11,7 @@ exports.default = new eventManager_1.RateLimitEventHandler({
         const commands = this.getExtension(__1.ForgeRateLimit, true).commands.get("queueExecuted");
         for (const command of commands) {
             forgescript_1.Interpreter.run({
-                obj: {},
+                obj: { guild: null, user: null, member: null, channel: null, message: null },
                 client: this,
                 command,
                 data: command.compiled.code,
